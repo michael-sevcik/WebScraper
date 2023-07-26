@@ -1,4 +1,6 @@
-﻿namespace ProductListCrawler;
+﻿// Ignore Spelling: downloader
+
+namespace ProductListCrawler;
 
 using Downloader;
 using HtmlAgilityPack;
@@ -7,12 +9,14 @@ using System.Linq;
 using System.Collections.Concurrent;
 
 
-public class ProductListCrawler
+public class ProductListCrawler : IProductListCrawler
 {
     private readonly IProductListProcessor processor;
+    private readonly IDownloader downloader;
 
-    public ProductListCrawler(IProductListProcessor processor)
+    public ProductListCrawler(IDownloader downloader, IProductListProcessor processor)
     {
+        this.downloader = downloader;
         this.processor = processor;
     }
 
@@ -35,9 +39,9 @@ public class ProductListCrawler
         } while (nextProductPage != null);
     }
 
-    private static async Task<HtmlDocument> GetPageDocument(Uri ProductListStart)
+    private async Task<HtmlDocument> GetPageDocument(Uri ProductListStart)
     {
-        var productListPageStream = await Downloader.GetStreamAsync(ProductListStart);
+        var productListPageStream = await downloader.GetStreamAsync(ProductListStart);
         return await Task.Run(() =>
         {
             HtmlDocument document = new();

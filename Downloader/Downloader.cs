@@ -1,13 +1,12 @@
 ﻿// Ignore Spelling: Downloader
 
-namespace Downloader
+namespace Downloader;
+
+public class Downloader : IDownloader
 {
-    public static class Downloader
+    private static readonly HttpClient client = new HttpClient();
+    public async Task<Stream> GetStreamAsync(Uri uri)
     {
-        private static HttpClient client = new HttpClient();
-        public static async Task<Stream> GetStreamAsync(Uri uri)
-        {
-            return await client.GetStreamAsync(uri);
-        }
+        return await client.GetStreamAsync(uri);
     }
 }

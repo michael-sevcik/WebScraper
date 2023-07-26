@@ -4,7 +4,7 @@ using ProductListCrawler;
 
 namespace WebScraper;
 
-internal class AuktivaProductListProcessor : IProductListProcessor
+public class AuktivaProductListProcessor : IProductListProcessor
 {
     public ProcessedProductList Process(HtmlDocument productListPage)
     {

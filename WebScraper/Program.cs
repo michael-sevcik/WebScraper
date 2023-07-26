@@ -1,18 +1,25 @@
 ﻿
 namespace WebScraper;
+
+using Downloader;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ProductListCrawler;
 using System.Threading.Tasks.Dataflow;
 
-/// <summary>
-/// Encapsulates the main entry point to the application.
-/// </summary>
-internal class Program
+class WebScraper
 {
-    /// <summary>
-    /// The main entry point to the application.
-    /// </summary>
-    /// <param name="args"></param>
-    public static void Main(string[] args)
+    private ILogger logger;
+    private IProductListCrawler crawler;
+
+    //public WebScraper(ILogger logger, IProductListCrawler crawler)
+    public WebScraper(IProductListCrawler crawler)
+    {
+        this.logger = logger;
+        this.crawler = crawler;
+    }
+
+    public void Run()
     {
         ActionBlock<IReadOnlyCollection<Uri>> action = new(uris =>
         {
@@ -22,8 +29,35 @@ internal class Program
             }
         });
 
-        ProductListCrawler crawler = new(new AuktivaProductListProcessor());
+        this.crawler.Crawl(new Uri("https://www.auktiva.cz/Keramika-c12035/"), action).Wait();
+    }
+}
 
-        crawler.Crawl(new Uri("https://www.auktiva.cz/Keramika-c12035/"), action).Wait();
+/// <summary>
+/// Encapsulates the main entry point to the application.
+/// </summary>
+/// 
+internal class Program
+{
+    /// <summary>
+    /// The main entry point to the application.
+    /// </summary>
+    /// <param name="args"></param>
+    public static void Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddLogging(builder => _ = builder.AddConsole());
+
+        services.AddSingleton<IProductListProcessor, AuktivaProductListProcessor>();
+        services.AddSingleton<IDownloader, Downloader>();
+        services.AddSingleton<IProductListCrawler, ProductListCrawler>();
+        services.AddSingleton<WebScraper>();
+
+
+        var provider = services.BuildServiceProvider();
+        var app = provider.GetService<WebScraper>();
+        app.Run();
+
+        provider.Dispose();
     }
 }
