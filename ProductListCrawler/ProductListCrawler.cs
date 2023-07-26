@@ -30,15 +30,17 @@
             } while (nextProductPage != null);
         }
 
-        private async Task<HtmlDocument> GetPageDocument(Uri ProductListStart)
+    private static async Task<HtmlDocument> GetPageDocument(Uri ProductListStart)
+    {
+        var productListPageStream = await Downloader.GetStreamAsync(ProductListStart);
+        return await Task.Run(() =>
         {
-            var productListPageStream = await Downloader.DownloadAsStringAsync(ProductListStart);
-            return await new Task<HtmlDocument>(() =>
-            {
-                HtmlDocument document = new();
-                document.Load(productListPageStream);
-                return document;
-            });
+            HtmlDocument document = new();
+            document.Load(productListPageStream);
+            return document;
+        });
+
+    }
 
         }
 
