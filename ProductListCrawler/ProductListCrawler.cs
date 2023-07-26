@@ -1,34 +1,39 @@
-﻿namespace ProductListCrawler
+﻿namespace ProductListCrawler;
+
+using Downloader;
+using HtmlAgilityPack;
+using System.Threading.Tasks.Dataflow;
+using System.Linq;
+using System.Collections.Concurrent;
+
+
+public class ProductListCrawler
 {
-    using Downloader;
-    using HtmlAgilityPack;
-    using System.Threading.Tasks.Dataflow;
-    using System.Linq;
+    private readonly IProductListProcessor processor;
 
-    public class ProductListCrawler
+    public ProductListCrawler(IProductListProcessor processor)
     {
-        private readonly IProductListProcessor processor;
+        this.processor = processor;
+    }
 
-        public ProductListCrawler(IProductListProcessor processor)
+    public async Task Crawl(Uri productListStart, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget)
+    {
+        // TODO: Handle Exceptions
+        Uri? nextProductPage = productListStart;
+        do
         {
-            this.processor = processor;
-        }
-
-        public async Task Crawl(Uri ProductListStart, ITargetBlock<Uri> productPageTarget)
-        {
-            // TODO: Handle Exceptions
-            Uri? nextProductPage = ProductListStart;
-            do
+            var output = await processor.ProcessAsync(await GetPageDocument(nextProductPage));
+            if (output.productPageUris.Any())
             {
-                var output = await processor.ProcessAsync(await GetPageDocument(nextProductPage));
-                foreach (var productPageUri in output.productPageUris)
+                if (!await productPageTarget.SendAsync(output.productPageUris))
                 {
-                    // TODO:
+                    throw new Exception("Consumer missing.");
                 }
+            }
 
-                nextProductPage = output.nextPage;
-            } while (nextProductPage != null);
-        }
+            nextProductPage = CombineUris(productListStart, output.nextPage);
+        } while (nextProductPage != null);
+    }
 
     private static async Task<HtmlDocument> GetPageDocument(Uri ProductListStart)
     {
@@ -42,7 +47,14 @@
 
     }
 
+    private static Uri? CombineUris(Uri baseUri, string? rest)
+    {
+        if (Uri.IsWellFormedUriString(rest, UriKind.Absolute))
+        {
+            return new Uri(rest);
         }
 
+        Uri.TryCreate(baseUri, rest, out var result);
+        return result;
     }
 }

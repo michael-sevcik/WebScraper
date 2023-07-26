@@ -6,9 +6,20 @@ using System.Threading.Tasks;
 
 namespace ProductListCrawler
 {
+    /// <summary>
+    /// The output of product list processing defined by <see cref="IProductListProcessor"/>.
+    /// </summary>
     public struct ProcessedProductList
     {
+        /// <summary>
+        /// Uris found on the product list page as references to product pages.
+        /// </summary>
         public IReadOnlyCollection<Uri> productPageUris;
-        public Uri? nextPage;
+
+        /// <summary>
+        /// Address of next product list page.
+        /// </summary>
+        /// <value><see langword="null"/> if next product list page does not exist.</value>
+        public string? nextPage;
     }
 }
