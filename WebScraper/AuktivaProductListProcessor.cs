@@ -16,7 +16,7 @@ public class AuktivaProductListProcessor : IProductListProcessor
     {
         var elements = productListPage.QuerySelectorAll("tbody .name");
 
-        var linkParser = (HtmlNode node ) =>
+        var linkParser = (HtmlNode node) =>
         {
             var linkNode = node.SelectSingleNode(".//a[@href]");
             string link = linkNode.GetAttributeValue("href", string.Empty);
@@ -27,8 +27,8 @@ public class AuktivaProductListProcessor : IProductListProcessor
         var nextPageParser = (HtmlNode node ) =>
         {
             var selectedPageNumber = node.QuerySelector(".counter a.selected");
-            var nextPage = selectedPageNumber.NextSiblingElement(); // TODO: Works, but it would deserve a better solution.
-            var hrefValue = nextPage.GetAttributeValue("href", string.Empty);
+            var nextPage = selectedPageNumber?.NextSiblingElement();  // TODO: Works, but it would deserve a better solution. // TODO: Crashes on only one page
+            var hrefValue = nextPage?.GetAttributeValue("href", string.Empty);
             return hrefValue == string.Empty ? null : hrefValue;
         };
         List<Uri> productPageUris = new();
