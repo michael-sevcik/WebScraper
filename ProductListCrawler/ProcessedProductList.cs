@@ -12,7 +12,7 @@ namespace ProductListCrawler
     public struct ProcessedProductList
     {
         /// <summary>
-        /// Uris found on the product list page as references to product pages.
+        /// URIs found on the product list page as references to product pages.
         /// </summary>
         public IReadOnlyCollection<Uri> productPageUris;
 

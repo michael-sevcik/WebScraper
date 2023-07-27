@@ -4,8 +4,14 @@ using ProductListCrawler;
 
 namespace WebScraper;
 
+/// <inheritdoc/>
 public class AuktivaProductListProcessor : IProductListProcessor
 {
+    /// <summary>
+    /// Processes the <paramref name="productListPage"/>.
+    /// </summary>
+    /// <param name="productListPage">The <c>HTML page</c> to be processed.</param>
+    /// <returns><see cref="ProcessedProductList"/> that encapsulates the processed data.</returns>
     public ProcessedProductList Process(HtmlDocument productListPage)
     {
         var elements = productListPage.QuerySelectorAll("tbody .name");
@@ -36,6 +42,7 @@ public class AuktivaProductListProcessor : IProductListProcessor
         return result;
     }
 
+    /// <inheritdoc/>
     public Task<ProcessedProductList> ProcessAsync(HtmlDocument productListPage)
     => Task.Run(() => this.Process(productListPage));
 }
