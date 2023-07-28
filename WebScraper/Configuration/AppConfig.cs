@@ -5,7 +5,7 @@ using Scraping;
 /// <summary>
 /// Encapsulates the configuration settings of a web scraper application.
 /// </summary>
-internal class AppConfig : IReadOnlyAppConfig // TODO: consider using record.
+public sealed class AppConfig : IReadOnlyAppConfig // TODO: consider using record and making .
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
@@ -24,7 +24,7 @@ internal class AppConfig : IReadOnlyAppConfig // TODO: consider using record.
     /// <summary>
     /// Gets or sets the period of scraping. // TODO: Consider using timespan.
     /// </summary>
-    public TimeSpan ScrapePeriod { get; set; }
+    public TimeSpan ScrapePeriod { get; set; } = TimeSpan.FromSeconds(300);
 
     /// <summary>
     /// Gets or sets the list of sites to be scraped.
