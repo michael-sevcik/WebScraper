@@ -2,7 +2,7 @@
 using HtmlAgilityPack.CssSelectors.NetCore;
 using ProductListCrawler;
 
-namespace WebScraper;
+namespace WebScraper.Scraping;
 
 /// <inheritdoc/>
 public class AuktivaProductListProcessor : IProductListProcessor
@@ -24,7 +24,7 @@ public class AuktivaProductListProcessor : IProductListProcessor
             return new Uri(link); // TODO: CHECK what the Uri does and whether it's used in a correct way.
         };
 
-        var nextPageParser = (HtmlNode node ) =>
+        var nextPageParser = (HtmlNode node) =>
         {
             var selectedPageNumber = node.QuerySelector(".counter a.selected");
             var nextPage = selectedPageNumber?.NextSiblingElement();  // TODO: Works, but it would deserve a better solution. // TODO: Crashes on only one page
@@ -44,5 +44,5 @@ public class AuktivaProductListProcessor : IProductListProcessor
 
     /// <inheritdoc/>
     public Task<ProcessedProductList> ProcessAsync(HtmlDocument productListPage)
-    => Task.Run(() => this.Process(productListPage));
+    => Task.Run(() => Process(productListPage));
 }

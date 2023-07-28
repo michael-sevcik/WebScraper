@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 
-namespace WebScraper;
+namespace WebScraper.Scraping;
 
 /// <summary>
 /// Parses the links to product pages from product list page document node.
@@ -19,8 +19,7 @@ public delegate string? ParseNextPageLinkDelegate(HtmlNode node);
 /// <summary>
 /// Represents an encapsulation of information describing a scraping of a particular product list.
 /// </summary>
-// TODO: should be always absolute.
-/// <param name="FirstProductListPageUri">The link to the first page of a product list.</param>
+/// <param name="FirstProductListPageUri">The link to the first page of a product list.</param> // TODO: should be always absolute.
 /// <param name="ProductPageLinksParser">A delegate that parses product page links from a product list page.</param>
 /// <param name="NextPageLinkParser">A delegate that parses next product list page URL from the current page.</param>
 public record ScrapingJobDefinition(

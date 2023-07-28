@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebScraper
+namespace WebScraper.AuctionRecord
 {
     /// <summary>
     /// Represents generic auction record repository that enables storing and managing of <typeparamref name="TRecord"/> entities.
@@ -36,11 +36,12 @@ namespace WebScraper
         /// <summary>
         /// Gets asynchronously all the <see cref="TRecord"/> entities.
         /// </summary>
+        /// <param name="dateTime">The date used for filtering.</param> // TODO:
         /// <returns>
         /// The task object representing the asynchronous operation. The Result property on the task object
         /// returns <see cref="IEnumerable{T}"/> containing all records.
         /// </returns>
-        Task<IEnumerable<TRecord>> GetAllFromDateAsync(DateTime);
+        Task<IEnumerable<TRecord>> GetAllFromDateAsync(DateTime dateTime);
 
         /// <summary>
         /// Asynchronously stores the new <paramref name="record"/>. // TODO: decide what should happen in case that the entity is already stored.

@@ -1,11 +1,11 @@
-﻿
-namespace WebScraper;
-
+﻿using System.Threading.Tasks.Dataflow;
 using Downloader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ProductListCrawler;
-using System.Threading.Tasks.Dataflow;
+using WebScraper.Scraping;
+
+namespace WebScraper;
 
 class WebScraper
 {
@@ -49,8 +49,8 @@ internal class Program
         services.AddLogging(builder => _ = builder.AddConsole());
 
         services.AddSingleton<IProductListProcessor, AuktivaProductListProcessor>();
-        services.AddSingleton<IDownloader, Downloader>();
-        services.AddSingleton<IProductListCrawler, ProductListCrawler>();
+        services.AddSingleton<IDownloader, Downloader.Downloader>();
+        services.AddSingleton<IProductListCrawler, ProductListCrawler.ProductListCrawler>();
         services.AddSingleton<WebScraper>();
 
 

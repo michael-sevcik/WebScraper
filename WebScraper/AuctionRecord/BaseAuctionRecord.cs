@@ -1,4 +1,4 @@
-﻿namespace WebScraper
+﻿namespace WebScraper.AuctionRecord
 {
     /// <summary>
     /// Base implementation of any auction <c>record</c> entity.

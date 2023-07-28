@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebScraper;
+namespace WebScraper.Configuration;
+
+using Scraping;
 
 /// <summary>
 /// Represents a view on the configuration settings of a web scraper application.
