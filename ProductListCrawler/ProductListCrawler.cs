@@ -12,9 +12,9 @@ using System.Collections.Concurrent;
 public class ProductListCrawler : IProductListCrawler
 {
     private readonly IProductListProcessor processor;
-    private readonly IDownloader downloader;
+    private readonly IHtmlDownloader downloader;
 
-    public ProductListCrawler(IDownloader downloader, IProductListProcessor processor)
+    public ProductListCrawler(IHtmlDownloader downloader, IProductListProcessor processor)
     {
         this.downloader = downloader;
         this.processor = processor;
@@ -26,7 +26,7 @@ public class ProductListCrawler : IProductListCrawler
         Uri? nextProductPage = productListStart;
         do
         {
-            var output = await processor.ProcessAsync(await GetPageDocument(nextProductPage));
+            var output = await processor.ProcessAsync(await downloader.GetPageDocumentAsync(nextProductPage));
             if (output.productPageUris.Any())
             {
                 if (!await productPageTarget.SendAsync(output.productPageUris))
@@ -37,18 +37,6 @@ public class ProductListCrawler : IProductListCrawler
 
             nextProductPage = CombineUris(productListStart, output.nextPage);
         } while (nextProductPage != null);
-    }
-
-    private async Task<HtmlDocument> GetPageDocument(Uri ProductListStart)
-    {
-        var productListPageStream = await downloader.GetStreamAsync(ProductListStart);
-        return await Task.Run(() =>
-        {
-            HtmlDocument document = new();
-            document.Load(productListPageStream);
-            return document;
-        });
-
     }
 
     private static Uri? CombineUris(Uri baseUri, string? rest)
