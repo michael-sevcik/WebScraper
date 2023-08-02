@@ -14,7 +14,7 @@ public class HtmlDownloader : IHtmlDownloader
     }
 
     /// <inheritdoc/>
-    public async Task<HtmlDocument> GetPageDocumentAsync(Uri pageUri)
+    public async Task<HtmlDocument> GetPageDocumentAsync(Uri pageUri) // TODO: handle exceptions.
     {
         var productListPageStream = await this.GetStreamAsync(pageUri);
         return await Task.Run(() =>
