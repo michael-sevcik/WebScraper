@@ -49,7 +49,7 @@ internal class Program
         services.AddLogging(builder => _ = builder.AddConsole());
 
         services.AddSingleton<IProductListProcessor, AuktivaProductListProcessor>();
-        services.AddSingleton<IDownloader, Downloader.Downloader>();
+        services.AddSingleton<IHtmlDownloader, Downloader.HtmlDownloader>();
         services.AddSingleton<IProductListCrawler, ProductListCrawler.ProductListCrawler>();
         services.AddSingleton<WebScraper>();
 
