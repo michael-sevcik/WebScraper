@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Downloader\Downloader.csproj" />
     <ProjectReference Include="..\WebScraper\WebScraper.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿
+﻿using Downloader;
+using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using Spectre.Console;
 using WebScraper.Configuration;
@@ -15,30 +16,9 @@ if (AnsiConsole.Confirm("Do you want to adjust scraping configuration?")) // TOD
     RunConfigurationGuide(ref appConfig);
 }
 
-//AnsiConsole.Status()
-//    .Start("Thinking...", ctx =>
-//    {
-//        // Simulate some work
-//        AnsiConsole.MarkupLine("Doing some work...");
-//        Thread.Sleep(1000);
-
-//        // Update the status and spinner
-//        ctx.Status("Thinking some more");
-//        ctx.Spinner(Spinner.Known.Star);
-//        ctx.SpinnerStyle(Style.Parse("green"));
-
-//        // Simulate some work
-//        AnsiConsole.MarkupLine("Doing some more work...");
-//        Thread.Sleep(10000);
-//    });
-
 void RunConfigurationGuide(ref AppConfig? appConfig)
 {
-    if (appConfig is null)
-    {
-        appConfig = new();
-
-    }
+    appConfig ??= new();
 
     appConfig.ScrapePeriod = TimeSpan.FromSeconds(AnsiConsole.Ask<uint>("Screpe period in seconds: ", (uint)appConfig.ScrapePeriod.TotalSeconds));
 
@@ -50,25 +30,45 @@ void RunScrapingSetup(ref AppConfig appConfig)
 {
     ScrapingJobDefinition GetScrapingJob()
     {
+        var parseLink = static (HtmlNode node) => node
+            .SelectSingleNode(".//a[@href]")
+            .GetAttributeValue("href", string.Empty);
+
         var stringURI = AnsiConsole.Prompt(new TextPrompt<string>("Uri of the first product list page: ")
             .Validate(str => Uri.IsWellFormedUriString(str, UriKind.Absolute), "The URI is not well formated.")
             );
         Uri firstProductListPageUri = new(stringURI);
 
-        var cssProductPageSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for selecting the links.")); // TODO: Add validation
+        HtmlDownloader downloader = new();
+        var htmldoc = downloader.GetPageDocumentAsync(firstProductListPageUri);
+
+        string cssProductPageSelector;
+        {
+            string exampleLink;
+            do
+            {
+                cssProductPageSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for selecting the links:")); // TODO: Add validation
+
+                // Wait for htmlDoc downloading and parsing
+                WaitForTask(() => htmldoc.Wait(), "Preparing the link...");
+                var node = htmldoc.Result.QuerySelector(cssProductPageSelector);
+                exampleLink = parseLink(node);
+            }
+            while (!AnsiConsole.Confirm($"Is this \"{exampleLink}\" a correct link to a product page"));
+        }
+
         ParseProductPageLinksDelegate productPageLinkParser = node =>
         {
             var productRecords = node.QuerySelectorAll(cssProductPageSelector);
             var links = from productRecord in productRecords
-                        select new Uri(productRecord
-                            .SelectSingleNode(".//a[@href]")
-                            .GetAttributeValue("href", string.Empty));
+                        select new Uri(parseLink(productRecord));
             return links.ToList();
         };
 
         // to select next page we will let user pick between selecting next page button and selecting next page from page list box.
         ParseNextPageLinkDelegate nextPageLinkParser = x => string.Empty; // TODO:
-        switch (AnsiConsole.Prompt(new SelectionPrompt<NextPageSelection>().AddChoices(NextPageSelection.nextElementFromCurrenctlySelected, NextPageSelection.button))) // TODO: Question text
+        switch (AnsiConsole.Prompt(new SelectionPrompt<NextPageSelection>()
+            .AddChoices(NextPageSelection.nextElementFromCurrenctlySelected, NextPageSelection.button))) // TODO: Question text
         {
             case NextPageSelection.button:
                 break;
@@ -77,6 +77,8 @@ void RunScrapingSetup(ref AppConfig appConfig)
             default:
                 throw new NotSupportedException();
         }
+
+        
 
         return new(firstProductListPageUri, productPageLinkParser, nextPageLinkParser);
     }
@@ -93,8 +95,22 @@ void RunScrapingSetup(ref AppConfig appConfig)
     }
 }
 
+void WaitForTask(Action action, string waitMessage)
+    => AnsiConsole.Status().Start("Thinking...", ctx =>
+    {
+        // Set the status and spinner
+        ctx.Status(waitMessage);
+        ctx.Spinner(Spinner.Known.Star);
+        ctx.SpinnerStyle(new Style(Color.Green));
+
+        // Execute the action
+        action();
+        Thread.Sleep(5000); // TODO: DELETE this.
+    });
+
 enum NextPageSelection
 {
     button,
     nextElementFromCurrenctlySelected,
 }
+
