@@ -11,7 +11,7 @@ using Scraping;
 /// <summary>
 /// Represents a view on the configuration settings of a web scraper application.
 /// </summary>
-public interface IReadOnlyAppConfig
+public interface IReadOnlyWebScraperConfig
 {
     /// <summary>
     /// Gets the period of scraping. // TODO: Consider using timespan.
