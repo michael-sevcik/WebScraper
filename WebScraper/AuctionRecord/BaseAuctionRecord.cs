@@ -1,13 +1,6 @@
 ﻿namespace WebScraper.AuctionRecord;
 
 /// <summary>
-/// Encapsulates field value pair used for storing information.
-/// </summary>
-/// <param name="Name">The name of the field.</param>
-/// <param name="Value">The value of the field.</param>
-public record struct AdditionalFieldValuePair(string Name, string Value); // TODO: MOVE
-
-/// <summary>
 /// Base implementation of any auction <c>record</c> entity.
 /// </summary>
 public class BaseAuctionRecord
@@ -48,7 +41,12 @@ public class BaseAuctionRecord
     public string Name { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the additional information collection.
+    /// Gets the unique identifier that is used for comparing ended auction records and newly scraped auctions.
     /// </summary>
-    public IReadOnlyCollection<AdditionalFieldValuePair> AdditionalInfromation { get; set; }
+    public string UniqueIdentification { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets the additional information collection.
+    /// </summary>
+    public IReadOnlyCollection<KeyValuePair<string, string>> AdditionalInfromation { get; init; } = Array.Empty<KeyValuePair<string, string>>();
 }
