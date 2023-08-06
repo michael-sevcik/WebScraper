@@ -12,8 +12,7 @@ class WebScraper
     private ILogger logger;
     private IProductListCrawler crawler;
 
-    //public WebScraper(ILogger logger, IProductListCrawler crawler)
-    public WebScraper(IProductListCrawler crawler)
+    public WebScraper(ILogger<WebScraper> logger, IProductListCrawler crawler)
     {
         this.logger = logger;
         this.crawler = crawler;
@@ -25,7 +24,7 @@ class WebScraper
         {
             foreach (var uri in uris)
             {
-                Console.WriteLine(uri);
+                this.logger.LogInformation(uri.ToString());
             }
         });
 
@@ -36,18 +35,15 @@ class WebScraper
 /// <summary>
 /// Encapsulates the main entry point to the application.
 /// </summary>
-/// 
 internal class Program
 {
     /// <summary>
     /// The main entry point to the application.
     /// </summary>
-    /// <param name="args"></param>
-    public static void Main(string[] args)
+    public static void Main()
     {
         var services = new ServiceCollection();
-        services.AddLogging(builder => _ = builder.AddConsole());
-
+        services.AddLogging(configure => configure.AddConsole());
         services.AddSingleton<IProductListProcessor, AuktivaProductListProcessor>();
         services.AddSingleton<IHtmlDownloader, Downloader.HtmlDownloader>();
         services.AddSingleton<IProductListCrawler, ProductListCrawler.ProductListCrawler>();
@@ -56,7 +52,7 @@ internal class Program
 
         var provider = services.BuildServiceProvider();
         var app = provider.GetService<WebScraper>();
-        app.Run();
+        app?.Run();
 
         provider.Dispose();
     }

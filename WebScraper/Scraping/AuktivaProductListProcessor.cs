@@ -14,7 +14,7 @@ public class AuktivaProductListProcessor : IProductListProcessor
     /// <returns><see cref="ProcessedProductList"/> that encapsulates the processed data.</returns>
     public ProcessedProductList Process(HtmlDocument productListPage)
     {
-        var elements = productListPage.QuerySelectorAll("tbody .name");
+        var elements = productListPage.QuerySelectorAll("tbody .name a");
 
         var linkParser = (HtmlNode node) =>
         {
