@@ -16,6 +16,7 @@ public interface IHtmlDownloader
     /// The task object representing the asynchronous operation.
     /// The Result property on the task object returns the Get response body as stream.
     /// </returns>
+    /// <exception cref="NetworkException">An error occurred during the network communication.</exception>
     Task<Stream> GetStreamAsync(Uri uri);
 
     /// <summary>
@@ -27,5 +28,6 @@ public interface IHtmlDownloader
     /// The task object representing the asynchronous operation.
     /// The Result property on the task object returns the Get response body as <see cref="HtmlDocument"/>.
     /// </returns>
+    /// <exception cref="NetworkException">An error occurred during the network communication.</exception>
     Task<HtmlDocument> GetPageDocumentAsync(Uri pageUri);
 }

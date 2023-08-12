@@ -10,7 +10,17 @@ public class HtmlDownloader : IHtmlDownloader
     /// <inheritdoc/>
     public async Task<Stream> GetStreamAsync(Uri uri)
     {
-        return await client.GetStreamAsync(uri);
+        Stream stream;
+        try
+        {
+            stream =  await client.GetStreamAsync(uri);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            throw new NetworkException("An error occured during creation of the stream", ex);
+        }
+
+        return stream;
     }
 
     /// <inheritdoc/>
