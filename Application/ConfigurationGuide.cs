@@ -46,7 +46,7 @@ internal static class ConfigurationGuide
         {
             ScrapePeriod = TimeSpan.FromSeconds(AnsiConsole.Prompt(new TextPrompt<int>("Enter a scraping period in minutes:")
                 .Validate(period => period > 0, "The value must be positive."))),
-            StoragePeriod = TimeSpan.FromDays(AnsiConsole.Prompt(new TextPrompt<int>("Enter a storage period (for how long should be the ended auction records stored):")
+            StoragePeriod = TimeSpan.FromDays(AnsiConsole.Prompt(new TextPrompt<int>("Enter a storage period (for how many days should be the ended auction records stored):")
                 .Validate(period => period > 0, "The value must be positive."))),
         };
     }
@@ -57,7 +57,7 @@ internal static class ConfigurationGuide
         
         // Download the first product list page
         Uri firstProductListPageUri = uris.First();
-        HtmlDownloader downloader = new(); // TODO: Consider moving somewhere else or utilizing DI.
+        HtmlDownloader downloader = new();
         var htmlDocTask = downloader.GetPageDocumentAsync(firstProductListPageUri);
         ConsoleHelper.WaitForTask(() => htmlDocTask.Wait(), "Downloading a product list page...");
 
@@ -68,12 +68,12 @@ internal static class ConfigurationGuide
         var productPageUri = CombineUris(firstProductListPageUri, productPageExapleLink);
         if (productPageUri is null)
         {
-            throw new(); // todo:
+            throw new($"An error occurred while combining of base URI and link to the product page: \"{firstProductListPageUri}\" and \"{productPageExapleLink}\"");
         }
 
         // Download a product page
         htmlDocTask = downloader.GetPageDocumentAsync(productPageUri);
-        ConsoleHelper.WaitForTask(() => htmlDocTask.Wait(), "Downloading a product page..."); // TODO: handle errors
+        ConsoleHelper.WaitForTask(() => htmlDocTask.Wait(), "Downloading a product page...");
 
         // Get the product page processor configuration
         documentNode = htmlDocTask.Result.DocumentNode;
@@ -102,17 +102,17 @@ internal static class ConfigurationGuide
 
     private static (ProductListProcessorConfiguration, string) GetListProcessorConfigurationAndProductPageLink(HtmlNode documentNode)
     {
-        string cssProductPageSelector = null!; // initialized by the lower lambda function.
+        string cssProductPageSelector = null!; // initialized by the lambda function below.
         string? exampleProductPageLink = null;
         DoUntil(true, exampleLink => $"Is this \"{exampleLink}\" a correct link (relative or absolute) to a product page", () =>
         {
             cssProductPageSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for selecting the links:")); // TODO: Add validation
 
             // Wait for htmlDoc downloading and parsing
-            var node = documentNode.QuerySelector(cssProductPageSelector);
+            var node = documentNode.QuerySelector(cssProductPageSelector); // TODO: try what happens with invalid selector.
             if (node is null)
             {
-                return "Element could not been found.";
+                return $"Element could not been found using the \"{cssProductPageSelector}\" CSS selector.";
             }
 
             exampleProductPageLink = ProductListProcessor.ParseLink(node);
@@ -121,7 +121,7 @@ internal static class ConfigurationGuide
 
         // to select next page we will let user pick between selecting next page button and selecting next page from page list box.
         var nextPageSelectionType = AnsiConsole.Prompt(new SelectionPrompt<NextPageSelectionType>()
-            .AddChoices(NextPageSelectionType.nextElementFromCurrenctlySelected, NextPageSelectionType.button));
+            .AddChoices(NextPageSelectionType.nextElementToCurrenctlySelected, NextPageSelectionType.button));
 
         string nextPageCssSelector = null!; // This is always filled by the lambda function
         DoUntil(true, exampleLink => $"Is this \"{exampleLink}\" a correct link (relative or absolute) to the 2nd product list page?", () =>
@@ -151,13 +151,17 @@ internal static class ConfigurationGuide
     private static ProductPageProcessorConfiguration GetProductPageProcessorConfiguration(HtmlNode documentNode)
     {
         // Add predefined information
-        string endOfAuctionXPathSelector = GetXPath(documentNode, "the auction end date");
-        string uniqueIdentificationXPathSelector = GetXPath(
+
+        var endOfAuctionSelector = new DateWithExactFormatSelector(
+            GetCssSelector(documentNode, "the auction end date"),
+            AnsiConsole.Ask<string>("Enter the exact datetime format for parsing (e. g. dd/mm/yyyy hh:mm:ss)"));
+
+        string uniqueIdentificationSelector = GetCssSelector(
             documentNode,
             "a unique identifier for storing the result and identifying readded items.");
 
-        string priceXPathSelector = GetXPath(documentNode, "the current price of the item");
-        string nameXPathSelector = GetXPath(documentNode, "the auction name");
+        string priceSelector = GetCssSelector(documentNode, "the current price of the item");
+        string nameSelector = GetCssSelector(documentNode, "the auction name");
 
         // Add additional info
         List<NameSelectorPair> nameSelectorPairs = new();
@@ -165,33 +169,33 @@ internal static class ConfigurationGuide
         {
             // get values from user
             string name = AnsiConsole.Ask<string>("Name idetifying the infromation:");
-            string xPathSelector = GetXPath(documentNode, name);
+            string xPathSelector = GetCssSelector(documentNode, name);
 
             // and another pair
             nameSelectorPairs.Add(new(name, xPathSelector));
         }
 
-        return new(endOfAuctionXPathSelector,
-            uniqueIdentificationXPathSelector,
-            priceXPathSelector,
-            nameXPathSelector,
+        return new(
+            endOfAuctionSelector,
+            uniqueIdentificationSelector,
+            priceSelector,
+            nameSelector,
             nameSelectorPairs);
     }
 
-    private static string GetXPath(HtmlNode documentNode, string nameOfSelectedInformation)
+    private static string GetCssSelector(HtmlNode documentNode, string nameOfSelectedInformation)
     {
-        string xpath = null!;
+        string cssSelector = null!;
         DoUntil(true, value => $"Is this \"{value}\" the correct value for {nameOfSelectedInformation}?", () =>
         {
-            xpath = AnsiConsole.Prompt(
-                new TextPrompt<string>($"XPath selector for selecting {nameOfSelectedInformation}:")
-                .Validate(xpath =>
+            cssSelector = AnsiConsole.Prompt(
+                new TextPrompt<string>($"CSS selector for selecting {nameOfSelectedInformation}:")
+                .Validate(selector =>
                 {
                     try
                     {
-                        XPathExpression.Compile(xpath);
-                        var node = documentNode.SelectSingleNode(xpath);
-                        _ = node.InnerHtml; // TODO: consider checking for null
+                        var node = documentNode.QuerySelector(selector);
+                        _ = node.InnerHtml;
                     }
                     catch (Exception ex)
                     {
@@ -201,10 +205,10 @@ internal static class ConfigurationGuide
                     return ValidationResult.Success();
                 }));
 
-            return documentNode.SelectSingleNode(xpath).InnerText; // TODO: what happens when there is no element with matching xpath.
+            return documentNode.QuerySelector(cssSelector).InnerText; // TODO: what happens when there is no element with matching CSS path.
         });
 
-        return xpath;
+        return cssSelector;
     }
 
     private static Uri? CombineUris(Uri baseUri, string? rest) // TODO: Consider moving to new project utils.

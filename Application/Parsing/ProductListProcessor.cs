@@ -41,7 +41,6 @@ public sealed class ProductListProcessor : IProductListProcessor
             _processorConfiguration.NextPageCSSSelector);
 
         result.productPageUris = ParseLinks(documentNode);
-
         return result;
     }
     
@@ -76,7 +75,7 @@ public sealed class ProductListProcessor : IProductListProcessor
             case NextPageSelectionType.button:
                 nextPage = ParseLink(selectedPageElement); // TODO: check
                 break;
-            case NextPageSelectionType.nextElementFromCurrenctlySelected:
+            case NextPageSelectionType.nextElementToCurrenctlySelected:
                 var nextPageNode = selectedPageElement.NextSiblingElement();  // TODO: Works, but it would deserve a better solution. // TODO: Crashes on only one page
                 if (nextPageNode is null)
                 {

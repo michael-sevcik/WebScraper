@@ -1,48 +1,66 @@
 ﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
+using HtmlAgilityPack.CssSelectors.NetCore;
+using ProductListCrawler;
 using WebScraper.AuctionRecord;
 using WebScraper.Scraping;
 
-namespace Application.Parsing
+namespace Application.Parsing;
+
+/// <summary>
+/// Implementation of <see cref="IProductPageProcessor"/> configurable via <see cref="ProductPageProcessorConfiguration"/>
+/// </summary>
+public class ProductPageProcessor : IProductPageProcessor
 {
-    public class ProductPageProcessor : IProductPageProcessor
+    private ProductPageProcessorConfiguration _configuration;
+
+    /// <summary>
+    /// Initializes an instance of <see cref="ProductPageProcessor"/> with the specified configuration.
+    /// </summary>
+    /// <param name="configuration">The product page processor configuration.</param>
+    public ProductPageProcessor(ProductPageProcessorConfiguration configuration)
+        => _configuration = configuration;
+
+    /// <summary>
+    /// Parses the product pages and extracts all the information into a <see cref="BaseAuctionRecord"/>.
+    /// </summary>
+    /// <param name="htmlDocument">The product page to be parsed.</param>
+    /// <returns>The parsed information as an instance of <see cref="BaseAuctionRecord"/></returns>
+    /// <exception cref="ParseException">An error occurred during parsing of <paramref name="htmlDocument"/>.</exception>
+    public BaseAuctionRecord ParseProductPage(HtmlDocument htmlDocument)
     {
-        private readonly XPathExpression _endOfAuction;
-        private readonly XPathExpression _uniqueIdentification;
-        private readonly XPathExpression _price;
-        private readonly XPathExpression _name;
-        private readonly IEnumerable<KeyValuePair<string, XPathExpression>> _additionalInfromation;
-
-        public ProductPageProcessor(ProductPageProcessorConfiguration configuration)
+        try
         {
-            _endOfAuction = XPathExpression.Compile(configuration.EndOfAuctionXPathSelector);
-            _uniqueIdentification = XPathExpression.Compile(configuration.UniqueIdentificationXPathSelector);
-            _price = XPathExpression.Compile(configuration.PriceXPathSelector);
-            _name = XPathExpression.Compile(configuration.NameXPathSelector);
+            var additionalInformation = this._configuration.AdditionalInfromation.Select(nameSelectorPair =>
+            {
+                var value = htmlDocument.QuerySelector(nameSelectorPair.CssSelector).InnerText; // TODO: CHECK
+                return new KeyValuePair<string, string>(nameSelectorPair.Name, value);
 
-            _additionalInfromation = configuration.AdditionalInfromation.Select(nameSelectorPair =>
-                new KeyValuePair<string, XPathExpression>(
-                    nameSelectorPair.Name,
-                    XPathExpression.Compile(nameSelectorPair.XPathSelector)));
+            }).ToArray();
+
+            return new BaseAuctionRecord() // TODO: finish the rest
+            {
+                Price = decimal.Parse(htmlDocument.QuerySelector(_configuration.PriceCssSelector).InnerText),
+                Created = DateTime.Now,
+                EndOfAuction = DateTime.ParseExact(htmlDocument.QuerySelector(
+                    _configuration.EndOfAuctionCssSelector.Selector).InnerText,
+                    _configuration.EndOfAuctionCssSelector.Format,
+                    null),
+                LastModification = DateTime.Now,
+                Name = htmlDocument.QuerySelector(_configuration.NameCssSelector).InnerText,
+                UniqueIdentification = htmlDocument.QuerySelector(_configuration.UniqueIdentificationCssSelector).InnerText,
+                AdditionalInfromation = additionalInformation
+            };
         }
-
-        /// <summary>
-        /// Parses the product pages and extracts all the information into a <see cref="BaseAuctionRecord"/>.
-        /// </summary>
-        /// <param name="htmlDocument">The product page to be parsed.</param>
-        /// <returns>The parsed information as an instance of <see cref="BaseAuctionRecord"/></returns>
-        public BaseAuctionRecord ParseProductPage(HtmlDocument htmlDocument)
+        catch (Exception ex)
         {
-            throw new NotImplementedException(); // TODO:
+            throw new ParseException(
+                $"An error occurred during parsing of this product page:{Environment.NewLine}{htmlDocument.DocumentNode.InnerHtml}{Environment.NewLine}" +
+                $"with this configuration:{Environment.NewLine}{_configuration}", ex);
         }
-
-        /// <inheritdoc/>
-        public async Task<BaseAuctionRecord> ParseProductPageAsync(HtmlDocument htmlDocument)
-            => await Task.Run(() => ParseProductPage(htmlDocument));
+        
     }
+
+    /// <inheritdoc/>
+    public async Task<BaseAuctionRecord> ParseProductPageAsync(HtmlDocument htmlDocument)
+        => await Task.Run(() => ParseProductPage(htmlDocument));
 }

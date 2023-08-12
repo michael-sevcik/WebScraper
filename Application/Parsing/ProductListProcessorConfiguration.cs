@@ -20,7 +20,7 @@ public enum NextPageSelectionType
     /// <summary>
     /// The link is extracted from the element next to the current page number.
     /// </summary>
-    nextElementFromCurrenctlySelected,
+    nextElementToCurrenctlySelected,
 }
 
 /// <summary>
