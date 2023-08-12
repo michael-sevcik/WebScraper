@@ -8,12 +8,12 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets the id of the record.
     /// </summary>
-    public Guid Id { get; init; }
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
     /// Gets the record's time of creation.
     /// </summary>
-    public DateTime Created { get; init; }
+    public DateTime Created { get; init; } = DateTime.Now;
 
     /// <summary>
     /// Gets the time when the auction was created.
