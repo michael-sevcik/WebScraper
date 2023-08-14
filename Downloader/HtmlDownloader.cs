@@ -17,7 +17,7 @@ public class HtmlDownloader : IHtmlDownloader
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
-            throw new NetworkException("An error occured during creation of the stream", ex);
+            throw new NetworkException($"An error occurred during creation of the stream. Requested URI: {uri}", ex);
         }
 
         return stream;
