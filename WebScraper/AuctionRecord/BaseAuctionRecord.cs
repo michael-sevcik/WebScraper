@@ -21,11 +21,6 @@ public class BaseAuctionRecord
     public DateTime EndOfAuction { get; init; }
 
     /// <summary>
-    /// Gets or sets the date of the last modification of this record.
-    /// </summary>
-    public DateTime LastModification { get; set; }
-
-    /// <summary>
     /// Gets or sets the price of the article that was known at the time specified in <see cref="LastModification"/>.
     /// </summary>
     public decimal Price { get; set; }
