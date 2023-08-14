@@ -1,7 +1,6 @@
 ﻿using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using ProductListCrawler;
-using WebScraper.AuctionRecord;
 using WebScraper.Scraping;
 
 namespace Application.Parsing;
@@ -21,12 +20,12 @@ public class ProductPageProcessor : IProductPageProcessor
         => _configuration = configuration;
 
     /// <summary>
-    /// Parses the product pages and extracts all the information into a <see cref="BaseAuctionRecord"/>.
+    /// Parses the product pages and extracts all the information into a <see cref="ParsedProductPage"/>.
     /// </summary>
     /// <param name="htmlDocument">The product page to be parsed.</param>
-    /// <returns>The parsed information as an instance of <see cref="BaseAuctionRecord"/></returns>
+    /// <returns>The parsed information as an instance of <see cref="ParsedProductPage"/></returns>
     /// <exception cref="ParseException">An error occurred during parsing of <paramref name="htmlDocument"/>.</exception>
-    public BaseAuctionRecord ParseProductPage(HtmlDocument htmlDocument)
+    public ParsedProductPage ParseProductPage(HtmlDocument htmlDocument)
     {
         try
         {
@@ -37,7 +36,7 @@ public class ProductPageProcessor : IProductPageProcessor
 
             }).ToArray();
 
-            return new BaseAuctionRecord() // TODO: finish the rest
+            return new ParsedProductPage() // TODO: finish the rest
             {
                 Price = decimal.Parse(htmlDocument.QuerySelector(_configuration.PriceCssSelector).InnerText),
                 Created = DateTime.Now,
@@ -47,7 +46,7 @@ public class ProductPageProcessor : IProductPageProcessor
                     null),
                 LastModification = DateTime.Now,
                 Name = htmlDocument.QuerySelector(_configuration.NameCssSelector).InnerText,
-                UniqueIdentification = htmlDocument.QuerySelector(_configuration.UniqueIdentificationCssSelector).InnerText,
+                UniqueIdentifier = htmlDocument.QuerySelector(_configuration.UniqueIdentificationCssSelector).InnerText,
                 AdditionalInfromation = additionalInformation
             };
         }
@@ -61,6 +60,6 @@ public class ProductPageProcessor : IProductPageProcessor
     }
 
     /// <inheritdoc/>
-    public async Task<BaseAuctionRecord> ParseProductPageAsync(HtmlDocument htmlDocument)
+    public async Task<ParsedProductPage> ParseProductPageAsync(HtmlDocument htmlDocument)
         => await Task.Run(() => ParseProductPage(htmlDocument));
 }
