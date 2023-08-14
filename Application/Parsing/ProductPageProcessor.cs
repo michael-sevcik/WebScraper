@@ -36,7 +36,7 @@ public class ProductPageProcessor : IProductPageProcessor
 
             }).ToArray();
 
-            return new ParsedProductPage() // TODO: finish the rest
+            return new ParsedProductPage()
             {
                 Price = decimal.Parse(htmlDocument.QuerySelector(_configuration.PriceCssSelector).InnerText),
                 Created = DateTime.Now,
@@ -44,7 +44,6 @@ public class ProductPageProcessor : IProductPageProcessor
                     _configuration.EndOfAuctionCssSelector.Selector).InnerText,
                     _configuration.EndOfAuctionCssSelector.Format,
                     null),
-                LastModification = DateTime.Now,
                 Name = htmlDocument.QuerySelector(_configuration.NameCssSelector).InnerText,
                 UniqueIdentifier = htmlDocument.QuerySelector(_configuration.UniqueIdentificationCssSelector).InnerText,
                 AdditionalInfromation = additionalInformation
