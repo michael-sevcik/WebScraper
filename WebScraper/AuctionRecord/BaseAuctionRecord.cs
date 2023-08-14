@@ -16,11 +16,6 @@ public class BaseAuctionRecord
     public DateTime Created { get; init; } = DateTime.Now;
 
     /// <summary>
-    /// Gets the time when the auction was created.
-    /// </summary>
-    public DateTime StartOfAuction { get; init; }
-
-    /// <summary>
     /// Gets the time when the auction will end.
     /// </summary>
     public DateTime EndOfAuction { get; init; }
@@ -43,7 +38,17 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets the unique identifier that is used for comparing ended auction records and newly scraped auctions.
     /// </summary>
-    public string UniqueIdentification { get; init; } = string.Empty;
+    public string UniqueIdentifier { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets a value indicating whether an auction that this record represents has ended.
+    /// </summary>
+    public bool Ended => this.EndOfAuction > DateTime.Now;
+
+    /// <summary>
+    /// Gets the Uri of the auction page.
+    /// </summary>
+    public string Uri { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets the additional information collection.
