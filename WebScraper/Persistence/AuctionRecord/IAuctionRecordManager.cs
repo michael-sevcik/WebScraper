@@ -1,7 +1,7 @@
 ﻿using System;
 using WebScraper.Scraping;
 
-namespace WebScraper.AuctionRecord;
+namespace WebScraper.Persistence.AuctionRecord;
 
 /// <summary>
 /// Represents a class for managing auction records.

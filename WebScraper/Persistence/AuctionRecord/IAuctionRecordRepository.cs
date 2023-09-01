@@ -1,4 +1,4 @@
-﻿namespace WebScraper.AuctionRecord
+﻿namespace WebScraper.Persistence.AuctionRecord
 {
     /// <summary>
     /// Represents generic auction record repository that enables storing and managing of <see cref="BaseAuctionRecord"/> entities.

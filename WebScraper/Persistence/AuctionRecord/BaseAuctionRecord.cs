@@ -1,4 +1,4 @@
-﻿namespace WebScraper.AuctionRecord;
+﻿namespace WebScraper.Persistence.AuctionRecord;
 
 /// <summary>
 /// Base implementation of any auction <c>record</c> entity.
@@ -38,7 +38,7 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets a value indicating whether an auction that this record represents has ended.
     /// </summary>
-    public bool Ended => this.EndOfAuction > DateTime.Now;
+    public bool Ended => EndOfAuction > DateTime.Now;
 
     /// <summary>
     /// Gets the Uri of the auction page.
