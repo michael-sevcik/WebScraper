@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a notification of an event.
 /// </summary>
-internal readonly struct Notification
+public readonly struct Notification
 {
     /// <summary>
     /// What kind of an event occurred.

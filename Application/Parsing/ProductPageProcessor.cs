@@ -36,14 +36,18 @@ public class ProductPageProcessor : IProductPageProcessor
 
             }).ToArray();
 
+            var datestring = htmlDocument.QuerySelector(
+                    _configuration.EndOfAuctionCssSelector.Selector).InnerText;
+
+            var endAuctionDate = DateTime.ParseExact(datestring,
+                    _configuration.EndOfAuctionCssSelector.Format,
+                    null);
+
             return new ParsedProductPage()
             {
-                Price = decimal.Parse(htmlDocument.QuerySelector(_configuration.PriceCssSelector).InnerText),
+                Price = htmlDocument.QuerySelector(_configuration.PriceCssSelector).InnerText,
                 Created = DateTime.Now,
-                EndOfAuction = DateTime.ParseExact(htmlDocument.QuerySelector(
-                    _configuration.EndOfAuctionCssSelector.Selector).InnerText,
-                    _configuration.EndOfAuctionCssSelector.Format,
-                    null),
+                EndOfAuction = endAuctionDate,
                 Name = htmlDocument.QuerySelector(_configuration.NameCssSelector).InnerText,
                 UniqueIdentifier = htmlDocument.QuerySelector(_configuration.UniqueIdentificationCssSelector).InnerText,
                 AdditionalInfromation = additionalInformation

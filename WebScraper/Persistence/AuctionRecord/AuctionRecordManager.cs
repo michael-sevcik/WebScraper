@@ -14,7 +14,10 @@ internal class AuctionRecordManager : IAuctionRecordManager
     private readonly ILogger logger;
     private readonly IAuctionRecordRepository recordRepository;
     private readonly INotifier notifier;
-    private readonly JsonSerializerOptions jsonSerializerOptions;
+    private readonly JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        WriteIndented = true,
+    };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuctionRecordManager"/> class.
@@ -27,39 +30,41 @@ internal class AuctionRecordManager : IAuctionRecordManager
         this.logger = logger;
         this.recordRepository = recordRepository;
         this.notifier = notifier;
-        jsonSerializerOptions = new();
-        jsonSerializerOptions.WriteIndented = true;
     }
 
     /// <inheritdoc/>
     public async Task HandleParsedProductPageAsync(ParsedProductPage parsedProductPage, Uri sourceUri)
     {
-        if (await recordRepository.TryGetAsync(parsedProductPage.UniqueIdentifier, out var storedRecord))
+        var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier);
+        if (storedRecord is not null)
         {
             // If the auction item already has an record, check whether the previous auction has ended.
             if (storedRecord.Ended && parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
             {
                 // Send a notification.
-                string message =
-$@"Old auction data:
-{JsonSerializer.Serialize(parsedProductPage, jsonSerializerOptions)}
-
-New auction data {JsonSerializer.Serialize(storedRecord, jsonSerializerOptions)}";
+                string message = $"""
+                    Old auction data:
+                    {JsonSerializer.Serialize(parsedProductPage, this.jsonSerializerOptions)}
+                    
+                    New auction data:
+                    
+                    {JsonSerializer.Serialize(storedRecord, this.jsonSerializerOptions)}
+                    """;
 
                 Notification notification = new(
                     reason: "Readded item",
                     tilte: $"Item with the name: \"{storedRecord.Name}\" and unique identifier: \"{storedRecord.UniqueIdentifier}\" was readded.",
                     message: message);
 
-                await notifier.NotifyAsync(notification);
+                await this.notifier.NotifyAsync(notification);
 
                 // Update the stored record.
-                await UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
+                await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
             }
         }
         else
         {
-            await recordRepository.AddAsync(CreateAuctionRecord(parsedProductPage, sourceUri));
+            await this.recordRepository.AddAsync(this.CreateAuctionRecord(parsedProductPage, sourceUri));
 
             // TODO: register update job
         }
@@ -68,14 +73,14 @@ New auction data {JsonSerializer.Serialize(storedRecord, jsonSerializerOptions)}
     /// <inheritdoc/>
     public async Task UpdateAuctionRecordAsync(Guid id, ParsedProductPage parsedProductPage, Uri sourceUri)
     {
-        var updatedRecord = CreateAuctionRecord(parsedProductPage, sourceUri, id);
-        await recordRepository.UpdateAsync(updatedRecord);
+        var updatedRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri, id);
+        await this.recordRepository.UpdateAsync(updatedRecord);
     }
 
-    private BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid id = default)
+    private BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid? id = null)
         => new()
         {
-            Id = id,
+            Id = id ?? Guid.NewGuid(),
             EndOfAuction = parsingResult.EndOfAuction,
             Name = parsingResult.Name,
             Price = parsingResult.Price,

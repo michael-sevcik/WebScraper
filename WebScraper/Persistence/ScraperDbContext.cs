@@ -1,24 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebScraper.Persistence.AuctionRecord;
 
 namespace WebScraper.Persistence;
 
+/// <summary>
+/// Implementation of <see cref="DbContext"/> that enables storing and managing <see cref="BaseAuctionRecord"/> entities.
+/// </summary>
 public sealed class ScraperDbContext : DbContext
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScraperDbContext"/> class.
+    /// </summary>
     public ScraperDbContext()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScraperDbContext"/> class.
+    /// </summary>
+    /// <param name="options">The options for this context.</param>
     public ScraperDbContext(DbContextOptions<ScraperDbContext> options)
     : base(options)
     {
     }
 
+    /// <summary>
+    /// Gets or sets the DbSet of <see cref="BaseAuctionRecord"/> entities.
+    /// </summary>
     public DbSet<BaseAuctionRecord> AuctionRecords { get; set; }
 
     /// <summary>
@@ -34,8 +42,11 @@ public sealed class ScraperDbContext : DbContext
     /// <param name="modelBuilder">The model builder.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-
-
+        modelBuilder.Entity<BaseAuctionRecord>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.OwnsMany(e => e.AdditionalInfromation).ToJson();
+            entity.Ignore(e => e.Ended);
+        });
     }
 }

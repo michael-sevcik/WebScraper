@@ -3,7 +3,9 @@ using Application.Parsing;
 using Downloader;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
+using Microsoft.Data.SqlClient;
 using Spectre.Console;
+using System.Data.Common;
 using System.Text.Json;
 using System.Xml.XPath;
 using WebScraper.Configuration;
@@ -36,13 +38,38 @@ internal static class ConfigurationGuide
 
     private static ApplicationConfiguration RunConfigurationGuide()
     {
+        // Get a valid connection string
+        var dbConnectionString = AnsiConsole.Prompt(new TextPrompt<string>("Enter a MSSQL Server database connection string:\n").Validate(cs =>
+        {
+            try
+            {
+                var factory = SqlClientFactory.Instance;
+                using var connection = factory.CreateConnection();
+                if (connection is null)
+                {
+                    throw new Exception();
+                }
+
+                connection.ConnectionString = cs;
+                connection.Open();
+            }
+            catch (Exception ex)
+            {
+                return ValidationResult.Error($"Db Connection using the entered connection string could not be established. {ex.Message}");
+            }
+
+            return ValidationResult.Success();
+        }));
+
+        // Get the scraping job definitions
         List<SerializableScrapingJobDefinition> scrapingJobs = new();
         do
         {
             scrapingJobs.Add(GetScrapingJob());
         } while (AnsiConsole.Confirm("Do you want to add another scraping job?"));
 
-        return new ApplicationConfiguration(scrapingJobs)
+        // Get the last configurations and create a configured application configuration instance
+        return new ApplicationConfiguration(scrapingJobs, dbConnectionString)
         {
             ScrapePeriod = TimeSpan.FromSeconds(AnsiConsole.Prompt(new TextPrompt<int>("Enter a scraping period in minutes:")
                 .Validate(period => period > 0, "The value must be positive."))),
@@ -211,7 +238,7 @@ internal static class ConfigurationGuide
         return cssSelector;
     }
 
-    private static Uri? CombineUris(Uri baseUri, string? rest) // TODO: Consider moving to new project utils.
+    private static Uri? CombineUris(Uri baseUri, string? rest) // TODO: Consider moving this to a new project utils.
     {
         if (Uri.IsWellFormedUriString(rest, UriKind.Absolute))
         {

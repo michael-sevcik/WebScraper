@@ -1,6 +1,6 @@
 ﻿using Downloader;
 using Microsoft.Extensions.Logging;
-using WebScraper.AuctionRecord;
+using WebScraper.Persistence.AuctionRecord;
 
 namespace WebScraper.Scraping;
 

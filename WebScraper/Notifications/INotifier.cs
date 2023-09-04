@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an objects that sends notifications.
 /// </summary>
-internal interface INotifier
+public interface INotifier
 {
     /// <summary>
     /// Asynchronously sends the <paramref name="notification"/>.

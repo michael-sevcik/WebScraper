@@ -13,10 +13,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Downloader\Downloader.csproj" />
+    <ProjectReference Include="..\MailSender\MailSender.csproj" />
     <ProjectReference Include="..\WebScraper\WebScraper.csproj" />
   </ItemGroup>
 

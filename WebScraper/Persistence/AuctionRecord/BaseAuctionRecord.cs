@@ -23,7 +23,7 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets or sets the price of the article that was known at the time specified in <see cref="LastModification"/>.
     /// </summary>
-    public decimal Price { get; set; }
+    public string Price { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the name of the auction.
@@ -38,7 +38,7 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets a value indicating whether an auction that this record represents has ended.
     /// </summary>
-    public bool Ended => EndOfAuction > DateTime.Now;
+    public bool Ended => this.EndOfAuction > DateTime.Now;
 
     /// <summary>
     /// Gets the Uri of the auction page.
@@ -48,5 +48,5 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets the additional information collection.
     /// </summary>
-    public IReadOnlyCollection<KeyValuePair<string, string>> AdditionalInfromation { get; init; } = Array.Empty<KeyValuePair<string, string>>();
+    public KeyValuePair<string, string>[] AdditionalInfromation { get; init; } = Array.Empty<KeyValuePair<string, string>>();
 }

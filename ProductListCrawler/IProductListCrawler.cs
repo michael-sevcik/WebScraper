@@ -15,8 +15,10 @@ public interface IProductListCrawler
     /// <summary>
     /// Crawls through the list of products, which starts with <paramref name="productListStart"/> page, as an asynchronous operation using a <see cref="Task"/> object.
     /// </summary>
+    /// <param name="token">The cancellation token.</param>
     /// <param name="productListStart">The URI of the page to start crawling.</param>
     /// <param name="productPageTarget">The target block to which the product page URIs should be passed.</param>
+    /// <param name="processor">The processor of a product list.</param>
     /// <returns>The task object representing the asynchronous crawling.</returns>
-    Task Crawl(Uri productListStart, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget);
+    Task Crawl(CancellationToken token, Uri productListStart, IProductListProcessor processor, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget);
 }

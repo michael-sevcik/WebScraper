@@ -1,22 +1,21 @@
 ﻿namespace WebScraper.Persistence.AuctionRecord
 {
     /// <summary>
-    /// Represents generic auction record repository that enables storing and managing of <see cref="BaseAuctionRecord"/> entities.
+    /// Represents an auction record repository that enables storing and managing <see cref="BaseAuctionRecord"/> entities.
     /// </summary>
     public interface IAuctionRecordRepository
     {
         /// <summary>
-        /// tries to asynchronously get the <see cref="BaseAuctionRecord"/> entity with the specified <paramref name="uniqueIdentifier"/>.
+        /// Asynchronously tries to get the <see cref="BaseAuctionRecord"/> entity with the specified <paramref name="uniqueIdentifier"/>.
         /// </summary>
         /// <param name="uniqueIdentifier">
         /// <see cref="BaseAuctionRecord.UniqueIdentifier"/> of the desired <see cref="BaseAuctionRecord"/> entity.
         /// </param>
-        /// <param name="record">A record with the <paramref name="uniqueIdentifier"/>.</param>
         /// <returns>
         /// The task object representing the asynchronous operation. The Result property on the task object
-        /// returns true if a record with the <paramref name="uniqueIdentifier"/> exists, otherwise false.
+        /// returns the record with the <paramref name="uniqueIdentifier"/>, if it exists, otherwise null.
         /// </returns>
-        Task<bool> TryGetAsync(string uniqueIdentifier, out BaseAuctionRecord record);
+        Task<BaseAuctionRecord?> GetOrDefault(string uniqueIdentifier);
 
         /// <summary>
         /// Gets asynchronously the <see cref="BaseAuctionRecord"/> entity with the specified <paramref name="id"/>.
@@ -46,7 +45,7 @@
         /// The task object representing the asynchronous operation. The Result property on the task object
         /// returns <see cref="IEnumerable{T}"/> containing all records.
         /// </returns>
-        Task<IEnumerable<BaseAuctionRecord>> GetAllFromDateAsync(DateTime dateTime);
+        Task<IEnumerable<BaseAuctionRecord>> GetAllEndingFromDateAsync(DateTime dateTime);
 
         /// <summary>
         /// Asynchronously stores the new <paramref name="record"/>. // TODO: decide what should happen in case that the entity is already stored.

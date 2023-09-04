@@ -13,6 +13,11 @@ namespace WebScraper.Jobs;
 /// </remarks>
 internal sealed class AuctionEndingUpdateJob : IJob
 {
+    /// <summary>
+    /// The key of the quartz job.
+    /// </summary>
+    public static readonly JobKey Key = new(nameof(AuctionEndingUpdateJob));
+
     /// <inheritdoc/>
     public async Task Execute(IJobExecutionContext context)
     {

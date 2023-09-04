@@ -2,7 +2,7 @@
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using ProductListCrawler;
-using WebScraper.AuctionRecord;
+using WebScraper.Persistence.AuctionRecord;
 
 namespace WebScraper.Scraping;
 
@@ -29,16 +29,25 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
         => (this.logger, this.downloader, this.productPageProcessor, this.recordManager) = (logger, downloader, productPageProcessor, recordManager);
 
     /// <inheritdoc/>
-    public async Task HandleLinksAsync(IEnumerable<Uri> links)
+    public async Task HandleLinksAsync(IEnumerable<Uri> links, CancellationToken cancellationToken)
     {
-        foreach (Uri link in links)
+        this.logger.LogInformation("Handling link block", links);
+
+        await Parallel.ForEachAsync(links, cancellationToken, async (link, ct) =>
         {
+            if (ct.IsCancellationRequested)
+            {
+                return;
+            }
+
             var record = await this.GetAuctionRecord(link);
-            if (record is not null)
+            if (record is not null && !ct.IsCancellationRequested)
             {
                 await this.recordManager.HandleParsedProductPageAsync(record, link);
             }
-        }
+        });
+
+        this.logger.LogTrace("Finished handling link block");
     }
 
     /// <inheritdoc/>

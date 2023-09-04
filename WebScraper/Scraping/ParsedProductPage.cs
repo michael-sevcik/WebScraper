@@ -18,7 +18,7 @@ public class ParsedProductPage
     /// <summary>
     /// Gets or sets the price of the article that was known at the time specified in <see cref="LastModification"/>.
     /// </summary>
-    public decimal Price { get; set; }
+    public string Price { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the name of the auction.
@@ -33,5 +33,5 @@ public class ParsedProductPage
     /// <summary>
     /// Gets the additional information collection.
     /// </summary>
-    public IReadOnlyCollection<KeyValuePair<string, string>> AdditionalInfromation { get; init; } = Array.Empty<KeyValuePair<string, string>>();
+    public KeyValuePair<string, string>[] AdditionalInfromation { get; init; } = Array.Empty<KeyValuePair<string, string>>();
 }

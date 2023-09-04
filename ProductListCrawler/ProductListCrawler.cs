@@ -8,24 +8,30 @@ using System.Threading.Tasks.Dataflow;
 using System.Linq;
 using System.Collections.Concurrent;
 
-
+/// <inheritdoc/>
 public class ProductListCrawler : IProductListCrawler
 {
-    private readonly IProductListProcessor processor;
     private readonly IHtmlDownloader downloader;
 
-    public ProductListCrawler(IHtmlDownloader downloader, IProductListProcessor processor)
-    {
-        this.downloader = downloader;
-        this.processor = processor;
-    }
+    /// <summary>
+    /// Creates a new instance of <see cref="ProductListCrawler"/>.
+    /// </summary>
+    /// <param name="downloader">THe downloader to use for downloading product list pages.</param>
+    public ProductListCrawler(IHtmlDownloader downloader)
+        => this.downloader = downloader;
 
-    public async Task Crawl(Uri productListStart, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget)
+    /// <inheritdoc/>
+    public async Task Crawl(CancellationToken token, Uri productListStart, IProductListProcessor processor, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget)
     {
         // TODO: Handle Exceptions
         Uri? nextProductPage = productListStart;
         do
         {
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             var output = await processor.ProcessAsync(await downloader.GetPageDocumentAsync(nextProductPage));
             if (output.productPageUris.Any())
             {

@@ -50,8 +50,17 @@ public sealed class ProductListProcessor : IProductListProcessor
 
     public static Uri ParseUriLink(HtmlNode node)
     {
-        var linkNode = node.SelectSingleNode(".//a[@href]");
-        string link = linkNode.GetAttributeValue("href", string.Empty);
+        var attribute = node.Attributes.SingleOrDefault(atr => atr.Name == "href");
+        string link;
+        if (attribute is null)
+        {
+            var linkNode = node.SelectSingleNode(".//a[@href]");
+            link = ParseLink(linkNode);
+        }
+        else
+        {
+            link = attribute.Value;
+        }
 
         return new Uri(link);
     }

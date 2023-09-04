@@ -12,8 +12,9 @@ public sealed class WebScraperConfig
     /// with the <paramref name="scrapingJobs"/>.
     /// </summary>
     /// <param name="scrapingJobs">the list of product list URIs to be scraped.</param>
-    public WebScraperConfig(IReadOnlyCollection<ScrapingJobDefinition> scrapingJobs)
-        => this.ScrapingJobs = scrapingJobs;
+    /// <param name="sqlServerConnectionString">The db connection string.</param>
+    public WebScraperConfig(IReadOnlyCollection<ScrapingJobDefinition> scrapingJobs, string sqlServerConnectionString)
+        => (this.ScrapingJobs, this.SqlServerConnectionString) = (scrapingJobs, sqlServerConnectionString);
 
     /// <summary>
     /// Gets the period of scraping.
@@ -29,4 +30,9 @@ public sealed class WebScraperConfig
     /// Gets the period during which the auction product records are stored after the end of a given auction.
     /// </summary>
     public TimeSpan StoragePeriod { get; init; }
+
+    /// <summary>
+    /// Gets the db connection string.
+    /// </summary>
+    public string SqlServerConnectionString { get; init; }
 }

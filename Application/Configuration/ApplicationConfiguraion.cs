@@ -14,15 +14,15 @@ namespace Application.Configuration
         /// Initializes a new instance of the <see cref="WebScraperConfig"/> class.
         /// </summary>
         public ApplicationConfiguration()
-            => this.ScrapingJobs = new();
+            => (this.ScrapingJobs, this.DbConnectionString) = (new(), string.Empty);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebScraperConfig"/> class
         /// with the <paramref name="scrapingJobs"/>.
         /// </summary>
         /// <param name="scrapingJobs">the list of product list URIs to be scraped.</param>
-        public ApplicationConfiguration(List<SerializableScrapingJobDefinition> scrapingJobs)
-            => this.ScrapingJobs = scrapingJobs;
+        public ApplicationConfiguration(List<SerializableScrapingJobDefinition> scrapingJobs, string dbConnectionString)
+            => (this.ScrapingJobs, this.DbConnectionString) = (scrapingJobs, dbConnectionString);
 
         /// <summary>
         /// Gets or sets the period of scraping.
@@ -39,6 +39,8 @@ namespace Application.Configuration
         /// </summary>
         public TimeSpan StoragePeriod { get; set; }
 
+        public string DbConnectionString { get; set; }
+
         /// <summary>
         /// Builds <see cref="WebScraperConfig"/> from the data in this instance of <see cref="ApplicationConfiguration"/>
         /// </summary>
@@ -51,7 +53,7 @@ namespace Application.Configuration
                 new ProductListProcessor(jobDefinition.ListProcessorConfiguration),
                 new ProductPageProcessor(jobDefinition.PageProcessorConfiguration))).ToArray();
 
-            return new(scrapingJobs)
+            return new(scrapingJobs, this.DbConnectionString)
             {
                 ScrapePeriod = this.ScrapePeriod,
                 StoragePeriod = this.StoragePeriod,

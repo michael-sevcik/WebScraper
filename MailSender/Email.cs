@@ -14,4 +14,12 @@ public readonly struct Email
     /// The content of an email that is displayed when addressee opens it. 
     /// </summary>
     public readonly string body;
+
+    /// <summary>
+    /// Creates an instance of <see cref="Email"/>.
+    /// </summary>
+    /// <param name="subject">The subject of the email.</param>
+    /// <param name="body">The body of the email.</param>
+    public Email(string subject, string body)
+        => (this.subject, this.body) = (subject, body);
 }
