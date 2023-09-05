@@ -8,7 +8,7 @@ namespace Application.Configuration
     /// A serializable class serving as encapsulation of the all configurations that are meant to be stored.
     /// </summary>
     [Serializable]
-    public sealed class ApplicationConfiguration // TODO: build the serializable configuration - the job replace the job definitions with processor configurations
+    public sealed class ApplicationConfiguration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WebScraperConfig"/> class.

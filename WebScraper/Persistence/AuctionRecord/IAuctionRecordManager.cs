@@ -6,15 +6,19 @@ namespace WebScraper.Persistence.AuctionRecord;
 /// <summary>
 /// Represents a class for managing auction records.
 /// </summary>
-internal interface IAuctionRecordManager
+public interface IAuctionRecordManager
 {
     /// <summary>
     /// Handles the <paramref name="parsedProductPage"/> - creates new <see cref="BaseAuctionRecord"/> if it is new, or sends a notification if it was readded.
     /// </summary>
     /// <param name="parsedProductPage">The parsed auction page to be handled.</param>
     /// <param name="sourceUri">The source URI of the parsed auction page.</param>
+    /// <param name="productPageProcessor">The product page processor that was used to create the <paramref name="parsedProductPage"/>.</param>
     /// <returns>The task object representing the asynchronous handling.</returns>
-    Task HandleParsedProductPageAsync(ParsedProductPage parsedProductPage, Uri sourceUri);
+    Task HandleParsedProductPageAsync(
+        ParsedProductPage parsedProductPage,
+        Uri sourceUri,
+        IProductPageProcessor productPageProcessor);
 
     /// <summary>
     /// Updates the auction record with the <paramref name="id"/>.

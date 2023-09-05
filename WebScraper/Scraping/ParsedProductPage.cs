@@ -1,4 +1,6 @@
-﻿namespace WebScraper.Scraping;
+﻿using WebScraper.Persistence.AuctionRecord;
+
+namespace WebScraper.Scraping;
 
 /// <summary>
 /// Base implementation of any auction <c>record</c> entity.
@@ -33,5 +35,5 @@ public class ParsedProductPage
     /// <summary>
     /// Gets the additional information collection.
     /// </summary>
-    public KeyValuePair<string, string>[] AdditionalInfromation { get; init; } = Array.Empty<KeyValuePair<string, string>>();
+    public List<AdditionalInfromationPair> AdditionalInfromation { get; init; } = new();
 }

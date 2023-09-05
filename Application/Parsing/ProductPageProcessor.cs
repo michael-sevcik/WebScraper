@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using ProductListCrawler;
+using WebScraper.Persistence.AuctionRecord;
 using WebScraper.Scraping;
 
 namespace Application.Parsing;
@@ -10,14 +11,14 @@ namespace Application.Parsing;
 /// </summary>
 public class ProductPageProcessor : IProductPageProcessor
 {
-    private ProductPageProcessorConfiguration _configuration;
+    private readonly ProductPageProcessorConfiguration configuration;
 
     /// <summary>
     /// Initializes an instance of <see cref="ProductPageProcessor"/> with the specified configuration.
     /// </summary>
     /// <param name="configuration">The product page processor configuration.</param>
     public ProductPageProcessor(ProductPageProcessorConfiguration configuration)
-        => _configuration = configuration;
+        => this.configuration = configuration;
 
     /// <summary>
     /// Parses the product pages and extracts all the information into a <see cref="ParsedProductPage"/>.
@@ -29,27 +30,27 @@ public class ProductPageProcessor : IProductPageProcessor
     {
         try
         {
-            var additionalInformation = this._configuration.AdditionalInfromation.Select(nameSelectorPair =>
+            var additionalInformation = this.configuration.AdditionalInfromation.Select(nameSelectorPair =>
             {
-                var value = htmlDocument.QuerySelector(nameSelectorPair.CssSelector).InnerText; // TODO: CHECK
-                return new KeyValuePair<string, string>(nameSelectorPair.Name, value);
+                var value = htmlDocument.QuerySelector(nameSelectorPair.CssSelector).InnerText;
+                return new AdditionalInfromationPair() { Name = nameSelectorPair.Name, Value = value };
 
-            }).ToArray();
+            }).ToList();
 
             var datestring = htmlDocument.QuerySelector(
-                    _configuration.EndOfAuctionCssSelector.Selector).InnerText;
+                    configuration.EndOfAuctionCssSelector.Selector).InnerText;
 
             var endAuctionDate = DateTime.ParseExact(datestring,
-                    _configuration.EndOfAuctionCssSelector.Format,
+                    configuration.EndOfAuctionCssSelector.Format,
                     null);
 
             return new ParsedProductPage()
             {
-                Price = htmlDocument.QuerySelector(_configuration.PriceCssSelector).InnerText,
+                Price = htmlDocument.QuerySelector(configuration.PriceCssSelector).InnerText,
                 Created = DateTime.Now,
                 EndOfAuction = endAuctionDate,
-                Name = htmlDocument.QuerySelector(_configuration.NameCssSelector).InnerText,
-                UniqueIdentifier = htmlDocument.QuerySelector(_configuration.UniqueIdentificationCssSelector).InnerText,
+                Name = htmlDocument.QuerySelector(configuration.NameCssSelector).InnerText,
+                UniqueIdentifier = htmlDocument.QuerySelector(configuration.UniqueIdentificationCssSelector).InnerText,
                 AdditionalInfromation = additionalInformation
             };
         }
@@ -57,7 +58,7 @@ public class ProductPageProcessor : IProductPageProcessor
         {
             throw new ParseException(
                 $"An error occurred during parsing of this product page:{Environment.NewLine}{htmlDocument.DocumentNode.InnerHtml}{Environment.NewLine}" +
-                $"with this configuration:{Environment.NewLine}{_configuration}", ex);
+                $"with this configuration:{Environment.NewLine}{configuration}", ex);
         }
         
     }

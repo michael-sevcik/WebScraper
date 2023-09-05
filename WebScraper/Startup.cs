@@ -7,9 +7,11 @@ using ProductListCrawler;
 using Quartz;
 using WebScraper.Configuration;
 using WebScraper.Jobs;
+using WebScraper.JobScheduling;
 using WebScraper.Notifications;
 using WebScraper.Persistence;
 using WebScraper.Persistence.AuctionRecord;
+using WebScraper.Persistence.UnitOfWork;
 using WebScraper.Scraping;
 
 namespace WebScraper;
@@ -42,12 +44,6 @@ public class Startup
             services.AddSingleton<IHtmlDownloader, HtmlDownloader>();
             services.AddSingleton<IProductListCrawler, ProductListCrawler.ProductListCrawler>();
 
-            services.AddDbContext<ScraperDbContext>(
-            options => options.UseSqlServer(this.config.SqlServerConnectionString), ServiceLifetime.Transient);
-            services.AddTransient<IAuctionRecordRepository, DbAuctionRecordRepository>();
-
-            //services.AddTransient<IAuctionRecordRepository, RamAuctionRecordRepository>(); // todo: delete
-
             // Use the specified notifier if it was provided, otherwise use the default logging one.
             if (this.specifiedNotifier is not null)
             {
@@ -58,14 +54,20 @@ public class Startup
                 services.AddSingleton<INotifier, LogNotifier>();
             }
 
-            services.AddSingleton<IAuctionRecordManager, AuctionRecordManager>();
+            services.AddDbContext<ScraperDbContext>(
+            options => options.UseSqlServer(this.config.SqlServerConnectionString));
 
-            services.AddSingleton<IProductPageLinkHandler, ProductPageLinkHandler>();
+            services.AddScoped<IAuctionRecordRepository, DbAuctionRecordRepository>();
+
+            services.AddScoped<IAuctionRecordManager, AuctionRecordManager>();
+            services.AddScoped<IUnitOfWork, ScraperUnitOfWork>();
+
+            services.AddSingleton<IUnitOfWorkProvider, UnitOfWorkProvider>();
+            services.AddSingleton<JobScheduler>();
+            services.AddSingleton<IProductPageLinkHandlerFactory, ProductPageLinkHandlerFactory>();
+            services.AddSingleton<WebScraper>();
 
             this.AddQuartzServices(services);
-
-            services.AddSingleton<IProductPageLinkHandlerFactory, ProductPageLinkHanlerFactory>();
-            services.AddSingleton<WebScraper>();
         });
 
     private void AddQuartzServices(IServiceCollection services)
@@ -82,8 +84,7 @@ public class Startup
                 .ForJob(CheckAuctionListsJob.Key) // link to the main scraping job
                 .WithIdentity($"{CheckAuctionListsJob.Key}-trigger")
                 .WithSimpleSchedule(x => x
-                    //.WithInterval(this.config.ScrapePeriod) // TODO: put here
-                    .WithInterval(TimeSpan.FromMinutes(5))
+                    .WithInterval(this.config.ScrapePeriod)
                     .RepeatForever()));
         });
 

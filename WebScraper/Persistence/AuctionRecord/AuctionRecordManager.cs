@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using WebScraper.JobScheduling;
 using WebScraper.Notifications;
 using WebScraper.Scraping;
 
@@ -12,6 +13,7 @@ namespace WebScraper.Persistence.AuctionRecord;
 internal class AuctionRecordManager : IAuctionRecordManager
 {
     private readonly ILogger logger;
+    private readonly JobScheduler jobScheduler;
     private readonly IAuctionRecordRepository recordRepository;
     private readonly INotifier notifier;
     private readonly JsonSerializerOptions jsonSerializerOptions = new()
@@ -23,17 +25,26 @@ internal class AuctionRecordManager : IAuctionRecordManager
     /// Initializes a new instance of the <see cref="AuctionRecordManager"/> class.
     /// </summary>
     /// <param name="logger">The logger.</param>
+    /// <param name="scheduler">Scheduler for scheduling update jobs.</param>
     /// <param name="notifier">Object that handles sending of the notifications.</param>
     /// <param name="recordRepository">A repository that should be used for storing the auction records.</param>
-    public AuctionRecordManager(ILogger<AuctionRecordManager> logger, IAuctionRecordRepository recordRepository, INotifier notifier)
+    public AuctionRecordManager(
+        ILogger<AuctionRecordManager> logger,
+        JobScheduler scheduler,
+        IAuctionRecordRepository recordRepository,
+        INotifier notifier)
     {
         this.logger = logger;
+        this.jobScheduler = scheduler;
         this.recordRepository = recordRepository;
         this.notifier = notifier;
     }
 
     /// <inheritdoc/>
-    public async Task HandleParsedProductPageAsync(ParsedProductPage parsedProductPage, Uri sourceUri)
+    public async Task HandleParsedProductPageAsync(
+        ParsedProductPage parsedProductPage,
+        Uri sourceUri,
+        IProductPageProcessor productPageProcessor)
     {
         var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier);
         if (storedRecord is not null)
@@ -59,25 +70,32 @@ internal class AuctionRecordManager : IAuctionRecordManager
                 await this.notifier.NotifyAsync(notification);
 
                 // Update the stored record.
-                await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
+                await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri); // TODO: same id
             }
         }
         else
         {
-            await this.recordRepository.AddAsync(this.CreateAuctionRecord(parsedProductPage, sourceUri));
+            var newAuctionRecord = CreateAuctionRecord(parsedProductPage, sourceUri);
+            await this.recordRepository.AddAsync(newAuctionRecord);
 
-            // TODO: register update job
+            await this.jobScheduler.ScheduleUpdateJobAsync(
+                newAuctionRecord.EndOfAuction,
+                sourceUri,
+                newAuctionRecord.Id,
+                productPageProcessor);
         }
     }
 
     /// <inheritdoc/>
     public async Task UpdateAuctionRecordAsync(Guid id, ParsedProductPage parsedProductPage, Uri sourceUri)
     {
-        var updatedRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri, id);
+        var updatedRecord = CreateAuctionRecord(parsedProductPage, sourceUri, id);
+
+        this.logger.LogTrace("Updating the record with id {id} and URI {sourceUri}", id, sourceUri);
         await this.recordRepository.UpdateAsync(updatedRecord);
     }
 
-    private BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid? id = null)
+    private static BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid? id = null)
         => new()
         {
             Id = id ?? Guid.NewGuid(),

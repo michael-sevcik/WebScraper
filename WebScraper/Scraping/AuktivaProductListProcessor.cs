@@ -21,13 +21,13 @@ public class AuktivaProductListProcessor : IProductListProcessor
             var linkNode = node.SelectSingleNode(".//a[@href]");
             string link = linkNode.GetAttributeValue("href", string.Empty);
 
-            return new Uri(link); // TODO: CHECK what the Uri does and whether it's used in a correct way.
+            return new Uri(link);
         };
 
         var nextPageParser = (HtmlNode node) =>
         {
             var selectedPageNumber = node.QuerySelector(".counter a.selected");
-            var nextPage = selectedPageNumber?.NextSiblingElement();  // TODO: Works, but it would deserve a better solution. // TODO: Crashes on only one page
+            var nextPage = selectedPageNumber?.NextSiblingElement();
             var hrefValue = nextPage?.GetAttributeValue("href", string.Empty);
             return hrefValue == string.Empty ? null : hrefValue;
         };

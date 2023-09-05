@@ -21,9 +21,8 @@ public class ProductListCrawler : IProductListCrawler
         => this.downloader = downloader;
 
     /// <inheritdoc/>
-    public async Task Crawl(CancellationToken token, Uri productListStart, IProductListProcessor processor, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget)
+    public async Task Crawl(Uri productListStart, IProductListProcessor processor, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget, CancellationToken token)
     {
-        // TODO: Handle Exceptions
         Uri? nextProductPage = productListStart;
         do
         {

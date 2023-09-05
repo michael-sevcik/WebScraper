@@ -32,15 +32,17 @@ public sealed class ProductListProcessor : IProductListProcessor
     public ProcessedProductList Process(HtmlDocument productListPage)
     {
         var documentNode = productListPage.DocumentNode;
-        ProcessedProductList result = new();
-
-        // process the product list page
-        result.nextPage = ParseNextPage(
+        ProcessedProductList result = new()
+        {
+            // process the product list page
+            nextPage = ParseNextPage(
             documentNode,
             _processorConfiguration.TypeOfNextPageSelection,
-            _processorConfiguration.NextPageCSSSelector);
+            _processorConfiguration.NextPageCSSSelector),
 
-        result.productPageUris = ParseLinks(documentNode);
+            productPageUris = ParseLinks(documentNode)
+        };
+
         return result;
     }
     
@@ -67,8 +69,6 @@ public sealed class ProductListProcessor : IProductListProcessor
 
     public static string? ParseNextPage(HtmlNode node, NextPageSelectionType pageSelectionType, string nextPageCSSSelector)
     {
-        string? nextPage = null;
-
         // try to find the next page element - either button or the current page number
         var selectedPageElement = node.QuerySelector(nextPageCSSSelector);
 
@@ -78,14 +78,25 @@ public sealed class ProductListProcessor : IProductListProcessor
             return null;
         }
 
+        string? nextPage;
         // According to the pageSelectionType select the link to the next page.
         switch (pageSelectionType)
         {
             case NextPageSelectionType.button:
-                nextPage = ParseLink(selectedPageElement); // TODO: check
+                nextPage = ParseLink(selectedPageElement);
                 break;
             case NextPageSelectionType.nextElementToCurrenctlySelected:
-                var nextPageNode = selectedPageElement.NextSiblingElement();  // TODO: Works, but it would deserve a better solution. // TODO: Crashes on only one page
+                HtmlNode? nextPageNode;
+                try
+                {
+                    nextPageNode = selectedPageElement.NextSiblingElement();
+
+                }
+                catch (Exception)
+                {
+                    nextPageNode = null;
+                }
+
                 if (nextPageNode is null)
                 {
                     return null;
@@ -97,7 +108,8 @@ public sealed class ProductListProcessor : IProductListProcessor
                 throw new NotSupportedException();
         }
 
-        return nextPage is null && nextPage == string.Empty? null : nextPage;
+        // if next page is null or empty string return null, otherwise the next page
+        return (nextPage is null || nextPage == string.Empty) ? null : nextPage;
     }
 
     public static string ParseLink(HtmlNode node)

@@ -44,12 +44,7 @@ internal static class ConfigurationGuide
             try
             {
                 var factory = SqlClientFactory.Instance;
-                using var connection = factory.CreateConnection();
-                if (connection is null)
-                {
-                    throw new Exception();
-                }
-
+                using var connection = factory.CreateConnection() ?? throw new Exception();
                 connection.ConnectionString = cs;
                 connection.Open();
             }
@@ -92,11 +87,8 @@ internal static class ConfigurationGuide
         var documentNode = htmlDocTask.Result.DocumentNode;
         var (productListProcessorConfiguration, productPageExapleLink) = GetListProcessorConfigurationAndProductPageLink(documentNode);
 
-        var productPageUri = CombineUris(firstProductListPageUri, productPageExapleLink);
-        if (productPageUri is null)
-        {
-            throw new($"An error occurred while combining of base URI and link to the product page: \"{firstProductListPageUri}\" and \"{productPageExapleLink}\"");
-        }
+        var productPageUri = CombineUris(firstProductListPageUri, productPageExapleLink)
+            ?? throw new($"An error occurred while combining the base URI and link to the product page: \"{firstProductListPageUri}\" and \"{productPageExapleLink}\"");
 
         // Download a product page
         htmlDocTask = downloader.GetPageDocumentAsync(productPageUri);
@@ -133,10 +125,10 @@ internal static class ConfigurationGuide
         string? exampleProductPageLink = null;
         DoUntil(true, exampleLink => $"Is this \"{exampleLink}\" a correct link (relative or absolute) to a product page", () =>
         {
-            cssProductPageSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for selecting the links:")); // TODO: Add validation
+            cssProductPageSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for selecting the links:"));
 
             // Wait for htmlDoc downloading and parsing
-            var node = documentNode.QuerySelector(cssProductPageSelector); // TODO: try what happens with invalid selector.
+            var node = documentNode.QuerySelector(cssProductPageSelector);
             if (node is null)
             {
                 return $"Element could not been found using the \"{cssProductPageSelector}\" CSS selector.";
@@ -153,7 +145,7 @@ internal static class ConfigurationGuide
         string nextPageCssSelector = null!; // This is always filled by the lambda function
         DoUntil(true, exampleLink => $"Is this \"{exampleLink}\" a correct link (relative or absolute) to the 2nd product list page?", () =>
         {
-            nextPageCssSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for next page element:")); // TODO: Add validation
+            nextPageCssSelector = AnsiConsole.Prompt(new TextPrompt<string>("CSS selector for next page element:"));
             var exampleLink = ProductListProcessor.ParseNextPage(documentNode, nextPageSelectionType, cssProductPageSelector);
 
             var node = documentNode.QuerySelector(nextPageCssSelector);
@@ -232,13 +224,13 @@ internal static class ConfigurationGuide
                     return ValidationResult.Success();
                 }));
 
-            return documentNode.QuerySelector(cssSelector).InnerText; // TODO: what happens when there is no element with matching CSS path.
+            return documentNode.QuerySelector(cssSelector).InnerText;
         });
 
         return cssSelector;
     }
 
-    private static Uri? CombineUris(Uri baseUri, string? rest) // TODO: Consider moving this to a new project utils.
+    private static Uri? CombineUris(Uri baseUri, string? rest)
     {
         if (Uri.IsWellFormedUriString(rest, UriKind.Absolute))
         {

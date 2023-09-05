@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebScraper.Persistence.AuctionRecord;
 
@@ -42,7 +37,7 @@ internal class DbAuctionRecordRepository : IAuctionRecordRepository
 
     /// <inheritdoc/>
     public Task<IEnumerable<BaseAuctionRecord>> GetAllAsync()
-        => Task.FromResult(this.records.AsEnumerable());
+        => Task.FromResult(this.records.AsNoTracking().AsEnumerable());
 
     /// <inheritdoc/>
     public Task<IEnumerable<BaseAuctionRecord>> GetAllEndingFromDateAsync(DateTime dateTime)
@@ -53,12 +48,17 @@ internal class DbAuctionRecordRepository : IAuctionRecordRepository
 
     /// <inheritdoc/>
     public async Task<BaseAuctionRecord> GetAsync(Guid id)
-    => await this.records.FindAsync(id) ??
+    {
+        var record = await this.records.FindAsync(id) ??
             throw new InvalidOperationException($"No record with id {id} was found.");
+
+        this.records.Entry(record).State = EntityState.Detached;
+        return record;
+    }
 
     /// <inheritdoc/>
     public async Task<BaseAuctionRecord?> GetOrDefault(string uniqueIdentifier)
-    => await this.records.SingleOrDefaultAsync(e => e.UniqueIdentifier == uniqueIdentifier);
+    => await this.records.AsNoTracking().SingleOrDefaultAsync(e => e.UniqueIdentifier == uniqueIdentifier);
 
     /// <inheritdoc/>
     public Task UpdateAsync(BaseAuctionRecord record)

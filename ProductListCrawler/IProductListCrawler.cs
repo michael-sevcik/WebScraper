@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using Downloader;
 
 namespace ProductListCrawler;
 
@@ -20,5 +21,6 @@ public interface IProductListCrawler
     /// <param name="productPageTarget">The target block to which the product page URIs should be passed.</param>
     /// <param name="processor">The processor of a product list.</param>
     /// <returns>The task object representing the asynchronous crawling.</returns>
-    Task Crawl(CancellationToken token, Uri productListStart, IProductListProcessor processor, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget);
+    /// <exception cref="NetworkException">Network error occurred.</exception>
+    Task Crawl(Uri productListStart, IProductListProcessor processor, ITargetBlock<IReadOnlyCollection<Uri>> productPageTarget, CancellationToken token);
 }

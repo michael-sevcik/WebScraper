@@ -1,8 +1,8 @@
-﻿using Downloader;
+﻿using System.Threading.Tasks.Dataflow;
+using Downloader;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using ProductListCrawler;
-using WebScraper.Persistence.AuctionRecord;
 
 namespace WebScraper.Scraping;
 
@@ -12,7 +12,6 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
     private readonly ILogger<ProductPageLinkHandler> logger;
     private readonly IHtmlDownloader downloader;
     private readonly IProductPageProcessor productPageProcessor;
-    private readonly IAuctionRecordManager recordManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductPageLinkHandler"/> class.
@@ -24,12 +23,14 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
     public ProductPageLinkHandler(
         ILogger<ProductPageLinkHandler> logger,
         IHtmlDownloader downloader,
-        IProductPageProcessor productPageProcessor,
-        IAuctionRecordManager recordManager)
-        => (this.logger, this.downloader, this.productPageProcessor, this.recordManager) = (logger, downloader, productPageProcessor, recordManager);
+        IProductPageProcessor productPageProcessor)
+        => (this.logger, this.downloader, this.productPageProcessor) = (logger, downloader, productPageProcessor);
 
     /// <inheritdoc/>
-    public async Task HandleLinksAsync(IEnumerable<Uri> links, CancellationToken cancellationToken)
+    public async Task HandleLinksAsync(
+        IEnumerable<Uri> links,
+        ITargetBlock<ProductPageParsingResult> targetBlock,
+        CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Handling link block", links);
 
@@ -41,9 +42,14 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
             }
 
             var record = await this.GetAuctionRecord(link);
-            if (record is not null && !ct.IsCancellationRequested)
+            if (record is null || ct.IsCancellationRequested)
             {
-                await this.recordManager.HandleParsedProductPageAsync(record, link);
+                return;
+            }
+
+            if (!await targetBlock.SendAsync(new(link, record, this.productPageProcessor), ct))
+            {
+                throw new Exception("Consumer is missing");
             }
         });
 
@@ -51,16 +57,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
     }
 
     /// <inheritdoc/>
-    public async Task UpdateAuctionRecordAsync(Uri link, Guid id)
-    {
-        var record = await this.GetAuctionRecord(link, id);
-        if (record is not null)
-        {
-            await this.recordManager.UpdateAuctionRecordAsync(id, record, link);
-        }
-    }
-
-    private async Task<ParsedProductPage?> GetAuctionRecord(Uri link, Guid id = default)
+    public async Task<ParsedProductPage?> GetAuctionRecord(Uri link)
     {
         // download the page
         HtmlDocument page;
@@ -70,7 +67,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
         }
         catch (NetworkException ex)
         {
-            this.logger.LogError(ex.Message, ex.InnerException);
+            this.logger.LogError("Exception occured: {message}, inner: {inner}", ex.Message, ex.InnerException);
             return null;
         }
 
@@ -82,7 +79,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
         }
         catch (ParseException ex)
         {
-            this.logger.LogError(ex.Message, ex.InnerException);
+            this.logger.LogError("Exception occured: {message}, inner: {inner}", ex.Message, ex.InnerException);
             return null;
         }
 

@@ -19,17 +19,14 @@ public sealed class LogNotifier : INotifier
     /// <inheritdoc/>
     public Task NotifyAsync(Notification notification)
     {
-        var subject = $"{notification.Reason}: {notification.Title}";
-        var body = notification.Message;
-
-        var message = $"""
-            {subject}
+        var message = """
+            {reason}: {Title}
             --------------------
 
             {body}
             """;
 
-        this.logger.LogCritical(message);
+        this.logger.LogInformation(message, notification.Reason, notification.Title, notification.Message);
         return Task.CompletedTask;
     }
 }

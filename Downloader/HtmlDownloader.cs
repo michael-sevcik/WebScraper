@@ -5,7 +5,7 @@ namespace Downloader;
 /// <inheritdoc/>
 public class HtmlDownloader : IHtmlDownloader
 {
-    private static readonly HttpClient client = new HttpClient();
+    private static readonly HttpClient client = new();
 
     /// <inheritdoc/>
     public async Task<Stream> GetStreamAsync(Uri uri)
@@ -24,7 +24,7 @@ public class HtmlDownloader : IHtmlDownloader
     }
 
     /// <inheritdoc/>
-    public async Task<HtmlDocument> GetPageDocumentAsync(Uri pageUri) // TODO: handle exceptions.
+    public async Task<HtmlDocument> GetPageDocumentAsync(Uri pageUri)
     {
         var productListPageStream = await this.GetStreamAsync(pageUri);
         return await Task.Run(() =>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents errors that occur during parsing.
 /// </summary>
-public class ParseException : Exception // TODO: use
+public class ParseException : Exception
 {
     /// Initializes a new instance of <see cref="ParseException"/> class.
     public ParseException()
