@@ -34,7 +34,7 @@ namespace WebScraper.Persistence.AuctionRecord
         }
 
         /// <inheritdoc/>
-        public Task<IEnumerable<BaseAuctionRecord>> GetAllEndingFromDateAsync(DateTime dateTime)
+        public Task<IEnumerable<BaseAuctionRecord>> GetAllEndingToDateAsync(DateTime dateTime)
         {
             throw new NotImplementedException();
         }

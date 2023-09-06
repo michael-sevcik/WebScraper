@@ -79,10 +79,22 @@ public class Startup
             q.AddJob<AuctionEndingUpdateJob>(AuctionEndingUpdateJob.Key, c => { c.StoreDurably(true); }); // It has no trigger directly attached.
             q.AddJob<CheckAuctionListsJob>(CheckAuctionListsJob.Key);
 
+            JobDataMap deleteJobDataMap = new() { { DeleteOldRecordsJob.StoragePeriodKey, this.config.StoragePeriod } };
+            q.AddJob<DeleteOldRecordsJob>(DeleteOldRecordsJob.Key, c => c.UsingJobData(deleteJobDataMap));
+
             // Create a trigger for the main scraping job
+            q.AddTrigger(opts => opts
+                .ForJob(DeleteOldRecordsJob.Key) // link to the delete job
+                .WithIdentity($"{DeleteOldRecordsJob.Key}-trigger")
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithInterval(TimeSpan.FromDays(1))
+                    .RepeatForever()));
+
             q.AddTrigger(opts => opts
                 .ForJob(CheckAuctionListsJob.Key) // link to the main scraping job
                 .WithIdentity($"{CheckAuctionListsJob.Key}-trigger")
+                .StartNow()
                 .WithSimpleSchedule(x => x
                     .WithInterval(this.config.ScrapePeriod)
                     .RepeatForever()));
