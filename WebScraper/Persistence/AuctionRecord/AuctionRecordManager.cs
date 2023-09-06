@@ -20,7 +20,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
     private readonly INotifier notifier;
     private readonly JsonSerializerOptions jsonSerializerOptions = new()
     {
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.AlphabeticPresentationForms),
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
         WriteIndented = true,
     };
 
@@ -66,7 +66,6 @@ internal class AuctionRecordManager : IAuctionRecordManager
 
                     Link: {sourceUri.OriginalString}
                     """;
-
 
                 Notification notification = new(
                     reason: "Readded item",
