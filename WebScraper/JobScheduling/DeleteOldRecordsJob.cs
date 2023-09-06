@@ -12,12 +12,12 @@ namespace WebScraper.Jobs;
 /// <see cref="Uri"/> link to the product page under "link"
 /// and appropriate <see cref="IProductPageLinkHandler"/> under "productPageLinkHandler".
 /// </remarks>
-internal sealed class AuctionEndingUpdateJob : IJob
+internal sealed class DeleteOldRecordsJob : IJob
 {
     /// <summary>
     /// The key of the quartz job.
     /// </summary>
-    public static readonly JobKey Key = new(nameof(AuctionEndingUpdateJob));
+    public static readonly JobKey Key = new(nameof(DeleteOldRecordsJob));
 
     /// <summary>
     /// The data map id key.
@@ -34,16 +34,14 @@ internal sealed class AuctionEndingUpdateJob : IJob
     /// </summary>
     public static readonly string RecordSourceLinkKey = "RecordSourceLink";
 
-    private readonly IUnitOfWorkProvider unitOfWorkProvider;
-    private readonly IProductPageLinkHandlerFactory linkHandlerFactory;
+    private readonly IUnitOfWork unitOfWork;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AuctionEndingUpdateJob"/> class.
+    /// Initializes a new instance of the <see cref="DeleteOldRecordsJob"/> class.
     /// </summary>
-    /// <param name="unitOfWorkProvider">The unit of work to be used in the execute method.</param>
-    /// <param name="linkHandlerFactory">Factory to create the link handler.</param>
-    public AuctionEndingUpdateJob(IUnitOfWorkProvider unitOfWorkProvider, IProductPageLinkHandlerFactory linkHandlerFactory)
-        => (this.unitOfWorkProvider, this.linkHandlerFactory) = (unitOfWorkProvider, linkHandlerFactory);
+    /// <param name="unitOfWork">The unit of work to be used in the execute method.</param>
+    public DeleteOldRecordsJob(IUnitOfWork unitOfWork)
+        => this.unitOfWork = unitOfWork;
 
     /// <inheritdoc/>
     public async Task Execute(IJobExecutionContext context)
@@ -68,17 +66,15 @@ internal sealed class AuctionEndingUpdateJob : IJob
         }
 
         // if product page was successfully parsed, pass it to the auction record manager
-        using (var scopedUnitOfWork = this.unitOfWorkProvider.CreateScopedUnitOfWork())
+        using (this.unitOfWork)
         {
-            var unitOfWork = scopedUnitOfWork.UnitOfWork;
-
             if (parsedProductPage is null)
             {
                 return;
             }
 
-            await unitOfWork.AuctionRecordManager.UpdateAuctionRecordAsync(id, parsedProductPage, link);
-            await unitOfWork.CompleteAsync();
+            await this.unitOfWork.AuctionRecordManager.UpdateAuctionRecordAsync(id, parsedProductPage, link);
+            await this.unitOfWork.CompleteAsync();
         }
     }
 }

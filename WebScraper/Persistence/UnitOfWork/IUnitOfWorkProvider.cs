@@ -9,5 +9,5 @@ public interface IUnitOfWorkProvider
     /// Creates a scoped unit of work.
     /// </summary>
     /// <returns>The scoped unit of work.</returns>
-    IScopedUnitOfWork CreateUnitOfWork();
+    IScopedUnitOfWork CreateScopedUnitOfWork();
 }

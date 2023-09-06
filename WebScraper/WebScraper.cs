@@ -98,7 +98,7 @@ public class WebScraper
             async uris =>
             {
                 // Get the scoped unit of work
-                using var unitOfWorkScope = this.unitOfWorkProvider.CreateUnitOfWork();
+                using var unitOfWorkScope = this.unitOfWorkProvider.CreateScopedUnitOfWork();
                 var unitOfWork = unitOfWorkScope.UnitOfWork;
 
                 var manager = unitOfWork.AuctionRecordManager;

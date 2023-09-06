@@ -17,7 +17,7 @@ internal sealed class UnitOfWorkProvider : IUnitOfWorkProvider
         => this.serviceProvider = serviceProvider;
 
     /// <inheritdoc/>
-    public IScopedUnitOfWork CreateUnitOfWork()
+    public IScopedUnitOfWork CreateScopedUnitOfWork()
     {
         var scope = this.serviceProvider.CreateScope();
         var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>()
