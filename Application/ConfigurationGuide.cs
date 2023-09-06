@@ -288,7 +288,7 @@ internal static class ConfigurationGuide
 
         var endOfAuctionSelector = new DateWithExactFormatSelector(
             GetCssSelector(documentNode, "the auction end date"),
-            AnsiConsole.Ask<string>("Enter the exact datetime format for parsing (e. g. dd/mm/yyyy hh:mm:ss)"));
+            AnsiConsole.Ask<string>("Enter the exact datetime format for parsing (e. g. dd/MM/yyyy HH:mm:ss)"));
 
         string uniqueIdentificationSelector = GetCssSelector(
             documentNode,
