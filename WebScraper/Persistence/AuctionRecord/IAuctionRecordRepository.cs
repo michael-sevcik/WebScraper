@@ -45,7 +45,7 @@
         /// The task object representing the asynchronous operation. The Result property on the task object
         /// returns <see cref="IEnumerable{T}"/> containing all records.
         /// </returns>
-        Task<IEnumerable<BaseAuctionRecord>> GetAllEndingFromDateAsync(DateTime dateTime);
+        Task<IEnumerable<BaseAuctionRecord>> GetAllEndingToDateAsync(DateTime dateTime);
 
         /// <summary>
         /// Asynchronously stores the new <paramref name="record"/>. // TODO: decide what should happen in case that the entity is already stored.

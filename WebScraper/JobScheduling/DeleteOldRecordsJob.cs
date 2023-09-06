@@ -1,4 +1,5 @@
 ﻿using Quartz;
+using WebScraper.Configuration;
 using WebScraper.Persistence.UnitOfWork;
 using WebScraper.Scraping;
 
@@ -20,61 +21,33 @@ internal sealed class DeleteOldRecordsJob : IJob
     public static readonly JobKey Key = new(nameof(DeleteOldRecordsJob));
 
     /// <summary>
-    /// The data map id key.
+    /// The data map key to the storage period.
     /// </summary>
-    public static readonly string RecordIdKey = "RecordId";
+    public static readonly string StoragePeriodKey = "StoragePeriod";
 
-    /// <summary>
-    /// The data map key of a saved  <see cref="IProductPageProcessor"/> instance.
-    /// </summary>
-    public static readonly string PageProcessorKey = "PageProcessor";
-
-    /// <summary>
-    /// The data map link key.
-    /// </summary>
-    public static readonly string RecordSourceLinkKey = "RecordSourceLink";
-
-    private readonly IUnitOfWork unitOfWork;
+    private readonly IUnitOfWorkProvider unitOfWorkProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteOldRecordsJob"/> class.
     /// </summary>
-    /// <param name="unitOfWork">The unit of work to be used in the execute method.</param>
-    public DeleteOldRecordsJob(IUnitOfWork unitOfWork)
-        => this.unitOfWork = unitOfWork;
+    /// <param name="unitOfWorkProvider">The unit of work to be used in the execute method.</param>
+    public DeleteOldRecordsJob(IUnitOfWorkProvider unitOfWorkProvider)
+        => this.unitOfWorkProvider = unitOfWorkProvider;
 
     /// <inheritdoc/>
     public async Task Execute(IJobExecutionContext context)
     {
-        // data from the data map
-        var link = (Uri)context.MergedJobDataMap[RecordSourceLinkKey];
-        var id = context.MergedJobDataMap.GetGuid(RecordIdKey);
-        var pageProcessor = (IProductPageProcessor)context.MergedJobDataMap[PageProcessorKey];
+        var storagePeriod = (TimeSpan)context.MergedJobDataMap[StoragePeriodKey];
 
-        // Create link handler using predefined link handler factory
-        var linkHandler = this.linkHandlerFactory.Create(pageProcessor);
+        using var scopedUnitOfWork = this.unitOfWorkProvider.CreateScopedUnitOfWork();
+        var repository = scopedUnitOfWork.UnitOfWork.AuctionRecordRepository;
 
-        // Get the product page and pass it to the manager.
-        var parsedProductPage = await linkHandler.GetAuctionRecord(link);
-
-        // retry getting the page two more times
-        int i = 0;
-        while (parsedProductPage is null && i++ < 2)
+        var recordsToDelete = await repository.GetAllEndingToDateAsync(DateTime.Now - storagePeriod);
+        foreach (var record in recordsToDelete)
         {
-            parsedProductPage = await linkHandler.GetAuctionRecord(link);
-            await Task.Delay(500);
+            await repository.DeleteAsync(record.Id);
         }
 
-        // if product page was successfully parsed, pass it to the auction record manager
-        using (this.unitOfWork)
-        {
-            if (parsedProductPage is null)
-            {
-                return;
-            }
-
-            await this.unitOfWork.AuctionRecordManager.UpdateAuctionRecordAsync(id, parsedProductPage, link);
-            await this.unitOfWork.CompleteAsync();
-        }
+        await scopedUnitOfWork.UnitOfWork.CompleteAsync();
     }
 }
