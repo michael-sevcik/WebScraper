@@ -68,17 +68,15 @@ internal sealed class AuctionEndingUpdateJob : IJob
         }
 
         // if product page was successfully parsed, pass it to the auction record manager
-        using (var scopedUnitOfWork = this.unitOfWorkProvider.CreateScopedUnitOfWork())
+        using var scopedUnitOfWork = this.unitOfWorkProvider.CreateScopedUnitOfWork();
+        var unitOfWork = scopedUnitOfWork.UnitOfWork;
+
+        if (parsedProductPage is null)
         {
-            var unitOfWork = scopedUnitOfWork.UnitOfWork;
-
-            if (parsedProductPage is null)
-            {
-                return;
-            }
-
-            await unitOfWork.AuctionRecordManager.UpdateAuctionRecordAsync(id, parsedProductPage, link);
-            await unitOfWork.CompleteAsync();
+            return;
         }
+
+        await unitOfWork.AuctionRecordManager.UpdateAuctionRecordAsync(id, parsedProductPage, link);
+        await unitOfWork.CompleteAsync();
     }
 }
