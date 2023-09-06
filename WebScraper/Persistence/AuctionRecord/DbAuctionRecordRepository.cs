@@ -40,9 +40,9 @@ internal class DbAuctionRecordRepository : IAuctionRecordRepository
         => Task.FromResult(this.records.AsNoTracking().AsEnumerable());
 
     /// <inheritdoc/>
-    public Task<IEnumerable<BaseAuctionRecord>> GetAllEndingFromDateAsync(DateTime dateTime)
+    public Task<IEnumerable<BaseAuctionRecord>> GetAllEndingToDateAsync(DateTime dateTime)
     {
-        var filteredRecords = this.records.Where(e => e.EndOfAuction > dateTime).AsEnumerable();
+        var filteredRecords = this.records.Where(e => e.EndOfAuction < dateTime).AsEnumerable();
         return Task.FromResult(filteredRecords);
     }
 
