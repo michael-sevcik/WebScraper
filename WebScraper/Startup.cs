@@ -21,7 +21,7 @@ namespace WebScraper;
 /// </summary>
 public class Startup
 {
-    private readonly WebScraperConfig config;
+    private readonly WebScraperConfiguration config;
 
     private readonly INotifier? specifiedNotifier;
 
@@ -30,7 +30,7 @@ public class Startup
     /// </summary>
     /// <param name="config">The configuration to add.</param>
     /// <param name="notifier">The notifier that handles sending of item readdition notifications.</param>
-    public Startup(WebScraperConfig config, INotifier? notifier = null)
+    public Startup(WebScraperConfiguration config, INotifier? notifier = null)
         => (this.config, this.specifiedNotifier) = (config, notifier);
 
     /// <summary>

@@ -20,7 +20,7 @@ public class WebScraper
     private readonly IProductListCrawler crawler; // product list crawler instance
     private readonly IUnitOfWorkProvider unitOfWorkProvider;
     private readonly IProductPageLinkHandlerFactory productPageLinkHandlerFactory; // product page link handler factory instance
-    private readonly WebScraperConfig config; // web scraper configuration instance
+    private readonly WebScraperConfiguration config; // web scraper configuration instance
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebScraper"/> class with the specified dependencies..
@@ -35,7 +35,7 @@ public class WebScraper
         IProductListCrawler crawler,
         IUnitOfWorkProvider unitOfWorkProvider,
         IProductPageLinkHandlerFactory factory,
-        WebScraperConfig config)
+        WebScraperConfiguration config)
      => (this.logger, this.crawler, this.unitOfWorkProvider, this.productPageLinkHandlerFactory, this.config)
         = (logger, crawler, unitOfWorkProvider, factory, config);
 

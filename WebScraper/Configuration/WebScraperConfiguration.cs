@@ -5,15 +5,15 @@ namespace WebScraper.Configuration;
 /// <summary>
 /// Encapsulates the configuration settings of a web scraper application.
 /// </summary>
-public sealed class WebScraperConfig
+public sealed class WebScraperConfiguration
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="WebScraperConfig"/> class
+    /// Initializes a new instance of the <see cref="WebScraperConfiguration"/> class
     /// with the <paramref name="scrapingJobs"/>.
     /// </summary>
     /// <param name="scrapingJobs">the list of product list URIs to be scraped.</param>
     /// <param name="sqlServerConnectionString">The db connection string.</param>
-    public WebScraperConfig(IReadOnlyCollection<ScrapingJobDefinition> scrapingJobs, string sqlServerConnectionString)
+    public WebScraperConfiguration(IReadOnlyCollection<ScrapingJobDefinition> scrapingJobs, string sqlServerConnectionString)
         => (this.ScrapingJobs, this.SqlServerConnectionString) = (scrapingJobs, sqlServerConnectionString);
 
     /// <summary>
