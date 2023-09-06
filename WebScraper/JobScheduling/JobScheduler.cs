@@ -3,64 +3,67 @@ using Quartz;
 using WebScraper.Jobs;
 using WebScraper.Scraping;
 
-namespace WebScraper.JobScheduling
+namespace WebScraper.JobScheduling;
+
+/// <summary>
+/// Scheduler for scheduling update jobs. <see cref="AuctionEndingUpdateJob"/>.
+/// </summary>
+internal sealed class JobScheduler
 {
-    internal sealed class JobScheduler
+    private static readonly TimeSpan TimeReserve = TimeSpan.FromSeconds(70);
+    private readonly ILogger<JobScheduler> logger;
+    private readonly IScheduler scheduler;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JobScheduler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="schedulerFactory">
+    /// A factory that should provide schedulers for scheduling jobs.
+    /// </param>
+    public JobScheduler(
+        ILogger<JobScheduler> logger,
+        ISchedulerFactory schedulerFactory)
     {
-        private readonly ILogger<JobScheduler> logger;
-        private readonly IScheduler scheduler;
+        this.logger = logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JobScheduler"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="schedulerFactory">
-        /// A factory that should provide schedulers for scheduling jobs.
-        /// </param>
-        public JobScheduler(
-            ILogger<JobScheduler> logger,
-            ISchedulerFactory schedulerFactory)
+        var schedulerTask = schedulerFactory.GetScheduler();
+        schedulerTask.Wait();
+        this.scheduler = schedulerTask.Result;
+    }
+
+    /// <summary>
+    /// Schedules the job with the specified data.
+    /// </summary>
+    /// <param name="jobStart">When should the job start.</param>
+    /// <param name="link">The source from which the job should be downloaded.</param>
+    /// <param name="id">The id of the record.</param>
+    /// <param name="pageProcessor">Processor that should parse the downloaded page.</param>
+    /// <returns>A task object that represents the asynchronous operation.</returns>
+    public async Task ScheduleUpdateJobAsync(
+        DateTime jobStart,
+        Uri link,
+        Guid id,
+        IProductPageProcessor pageProcessor)
+    {
+        // Populate the data map
+        JobDataMap jobDataMap = new()
         {
-            this.logger = logger;
+            { AuctionEndingUpdateJob.RecordSourceLinkKey, link },
+            { AuctionEndingUpdateJob.RecordIdKey, id },
+            { AuctionEndingUpdateJob.PageProcessorKey, pageProcessor },
+        };
 
-            var schedulerTask = schedulerFactory.GetScheduler();
-            schedulerTask.Wait();
-            this.scheduler = schedulerTask.Result;
-        }
+        // Create a trigger
+        var trigger = TriggerBuilder.Create()
+            .StartAt(jobStart - TimeReserve)
+            .UsingJobData(jobDataMap)
+            .ForJob(AuctionEndingUpdateJob.Key)
+            .Build();
 
-        /// <summary>
-        /// Schedules the job with the specified data.
-        /// </summary>
-        /// <param name="jobStart">When should the job start.</param>
-        /// <param name="link">The source from which the job should be downloaded.</param>
-        /// <param name="id">The id of the record.</param>
-        /// <param name="pageProcessor">Processor that should parse the downloaded page.</param>
-        /// <returns>A task object that represents the asynchronous operation.</returns>
-        public async Task ScheduleUpdateJobAsync(
-            DateTime jobStart,
-            Uri link,
-            Guid id,
-            IProductPageProcessor pageProcessor)
-        {
-            // Populate the data map
-            JobDataMap jobDataMap = new()
-            {
-                { AuctionEndingUpdateJob.RecordSourceLinkKey, link },
-                { AuctionEndingUpdateJob.RecordIdKey, id },
-                { AuctionEndingUpdateJob.PageProcessorKey, pageProcessor },
-            };
+        this.logger.LogTrace($"Scheduling an update job for the product on page {link}. The job start: {jobStart}");
 
-            // Create a trigger
-            var trigger = TriggerBuilder.Create()
-                .StartAt(jobStart)
-                .UsingJobData(jobDataMap)
-                .ForJob(AuctionEndingUpdateJob.Key)
-                .Build();
-
-            this.logger.LogTrace($"Scheduling an update job for the product on page {link}. The job start: {jobStart}");
-
-            // Schedule the job
-            await this.scheduler.ScheduleJob(trigger);
-        }
+        // Schedule the job
+        await this.scheduler.ScheduleJob(trigger);
     }
 }
