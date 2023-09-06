@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using Microsoft.Extensions.Logging;
 using WebScraper.JobScheduling;
 using WebScraper.Notifications;
@@ -18,6 +20,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
     private readonly INotifier notifier;
     private readonly JsonSerializerOptions jsonSerializerOptions = new()
     {
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.AlphabeticPresentationForms),
         WriteIndented = true,
     };
 
@@ -55,19 +58,31 @@ internal class AuctionRecordManager : IAuctionRecordManager
                 // Send a notification.
                 string message = $"""
                     Old auction data:
-                    {JsonSerializer.Serialize(parsedProductPage, this.jsonSerializerOptions)}
+                    {JsonSerializer.Serialize(storedRecord, this.jsonSerializerOptions)}
                     
                     New auction data:
                     
-                    {JsonSerializer.Serialize(storedRecord, this.jsonSerializerOptions)}
+                    {JsonSerializer.Serialize(parsedProductPage, this.jsonSerializerOptions)}
+
+                    Link: {sourceUri.OriginalString}
                     """;
+
 
                 Notification notification = new(
                     reason: "Readded item",
                     tilte: $"Item with the name: \"{storedRecord.Name}\" and unique identifier: \"{storedRecord.UniqueIdentifier}\" was readded.",
                     message: message);
 
-                await this.notifier.NotifyAsync(notification);
+                this.logger.LogInformation("Sending notification: {notification}", notification.Title);
+
+                try
+                {
+                    await this.notifier.NotifyAsync(notification);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogError("Notification failed: {message}", ex.Message);
+                }
 
                 // Update the stored record.
                 await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri); // TODO: same id

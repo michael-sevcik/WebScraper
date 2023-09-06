@@ -10,5 +10,6 @@ public interface INotifier
     /// </summary>
     /// <param name="notification">The description of the new event.</param>
     /// <returns>Task object representing the asynchronous operation.</returns>
+    /// <exception cref="Exception">Notification failed.</exception>
     Task NotifyAsync(Notification notification);
 }

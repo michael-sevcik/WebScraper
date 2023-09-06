@@ -1,4 +1,5 @@
 ﻿using Application.Parsing;
+using MailSender;
 using WebScraper.Configuration;
 using WebScraper.Scraping;
 
@@ -8,21 +9,21 @@ namespace Application.Configuration
     /// A serializable class serving as encapsulation of the all configurations that are meant to be stored.
     /// </summary>
     [Serializable]
-    public sealed class ApplicationConfiguration
+    public sealed class SerializableWebScraperConfiguration
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebScraperConfig"/> class.
+        /// Initializes a new instance of the <see cref="WebScraperConfiguration"/> class.
         /// </summary>
-        public ApplicationConfiguration()
-            => (this.ScrapingJobs, this.DbConnectionString) = (new(), string.Empty);
+        public SerializableWebScraperConfiguration()
+            => (this.ScrapingJobs) = (new());
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebScraperConfig"/> class
+        /// Initializes a new instance of the <see cref="WebScraperConfiguration"/> class
         /// with the <paramref name="scrapingJobs"/>.
         /// </summary>
         /// <param name="scrapingJobs">the list of product list URIs to be scraped.</param>
-        public ApplicationConfiguration(List<SerializableScrapingJobDefinition> scrapingJobs, string dbConnectionString)
-            => (this.ScrapingJobs, this.DbConnectionString) = (scrapingJobs, dbConnectionString);
+        public SerializableWebScraperConfiguration(List<SerializableScrapingJobDefinition> scrapingJobs)
+            => (this.ScrapingJobs) = (scrapingJobs);
 
         /// <summary>
         /// Gets or sets the period of scraping.
@@ -39,13 +40,16 @@ namespace Application.Configuration
         /// </summary>
         public TimeSpan StoragePeriod { get; set; }
 
-        public string DbConnectionString { get; set; }
+        /// <summary>
+        /// Gets or sets the SQL server connection string.
+        /// </summary>
+        public string DbConnectionString { get; set; } = string.Empty;
 
         /// <summary>
-        /// Builds <see cref="WebScraperConfig"/> from the data in this instance of <see cref="ApplicationConfiguration"/>
+        /// Builds <see cref="WebScraperConfiguration"/> from the data in this instance of <see cref="SerializableWebScraperConfiguration"/>
         /// </summary>
         /// <returns></returns>
-        internal WebScraperConfig BuildWebScraperConfiguration()
+        internal WebScraperConfiguration BuildWebScraperConfiguration()
         {
 
             var scrapingJobs = this.ScrapingJobs.Select(jobDefinition => new ScrapingJobDefinition(

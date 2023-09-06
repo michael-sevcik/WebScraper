@@ -24,6 +24,6 @@ public enum NextPageSelectionType
 }
 
 /// <summary>
-/// Configuration record for <see cref="ProductListProcessor"/>.
+/// EmailNotificationConfiguration record for <see cref="ProductListProcessor"/>.
 /// </summary>
 public record ProductListProcessorConfiguration(string ProductsCssSelector, string NextPageCSSSelector, NextPageSelectionType TypeOfNextPageSelection);

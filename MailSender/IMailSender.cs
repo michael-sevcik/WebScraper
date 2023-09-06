@@ -14,7 +14,7 @@ namespace MailSender
         /// <summary>
         /// Asynchronously sends the <paramref name="email"/>.
         /// </summary>
-        /// <param name="email">The email to be send.</param>
+        /// <param name="email">The email to be sent.</param>
         /// <returns>Email sending task.</returns>
         Task SendEmailAsync(Email email);
     }

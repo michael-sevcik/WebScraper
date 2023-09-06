@@ -1,4 +1,5 @@
 ﻿using MailSender;
+using MimeKit;
 
 namespace WebScraper.Notifications;
 
@@ -8,13 +9,15 @@ namespace WebScraper.Notifications;
 internal class EmailNotifier : INotifier
 {
     private readonly IMailSender mailSender;
+    private readonly MailboxAddress recipient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailNotifier"/> class.
     /// </summary>
     /// <param name="mailSender">The mail sender that is used for sending the email notifications.</param>
-    public EmailNotifier(IMailSender mailSender)
-        => this.mailSender = mailSender;
+    /// <param name="recipient">Mail address to which the notifications should be sent.</param>
+    public EmailNotifier(IMailSender mailSender, string recipient)
+        => (this.mailSender, this.recipient )= (mailSender, MailboxAddress.Parse(recipient));
 
     /// <inheritdoc/>
     public async Task NotifyAsync(Notification notification)
@@ -24,6 +27,6 @@ internal class EmailNotifier : INotifier
         var body = notification.Message;
 
         // Create and send the email
-        await this.mailSender.SendEmailAsync(new(subject, body));
+        await this.mailSender.SendEmailAsync(new(recipient, subject, body));
     }
 }

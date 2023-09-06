@@ -3,9 +3,13 @@ using Application.Parsing;
 using Downloader;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
+using MailKit.Net.Smtp;
+using MailSender;
 using Microsoft.Data.SqlClient;
+using MimeKit;
 using Spectre.Console;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Xml.XPath;
 using WebScraper.Configuration;
@@ -14,30 +18,140 @@ namespace Application;
 
 internal static class ConfigurationGuide
 {
-    public static WebScraperConfig GetConfiguration()
-    {
-        var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AuctionWebScraper");
-        System.IO.Directory.CreateDirectory(folderPath);
-        var configurationFilePath = Path.Combine(folderPath, "applicationConfiguration.json");
+    private static readonly string ConfigurationDirectoryName = "AuctionWebScraper";
+    private static readonly string SerializedWebScraperFileName = "WebScraperConfiguration.json";
+    private static readonly string SerializedEmailNotificationConfiguration = "EmailNotificationConfiguration.json";
 
-        ApplicationConfiguration? appConfig = null;
+    public static ApplicationConfiguration GetConfiguration()
+    {
+        var webscraperConfiguration = GetWebScraperConfiguration();
+        var emailConfiguration = GetEmailConfiguration();
+
+        return new ApplicationConfiguration(emailConfiguration, webscraperConfiguration);
+    }
+
+    private static WebScraperConfiguration GetWebScraperConfiguration()
+    {
+        var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ConfigurationDirectoryName);
+        System.IO.Directory.CreateDirectory(folderPath);
+        var configurationFilePath = Path.Combine(folderPath, SerializedWebScraperFileName);
+
+        SerializableWebScraperConfiguration? configuration = null;
         if (File.Exists(configurationFilePath))
         {
             var jsonText = File.ReadAllText(configurationFilePath);
-            appConfig = JsonSerializer.Deserialize<ApplicationConfiguration>(jsonText);
+            configuration = JsonSerializer.Deserialize<SerializableWebScraperConfiguration>(jsonText);
         }
 
-        if (appConfig is null)
+        if (configuration is null)
         {
-            appConfig = RunConfigurationGuide();
-            File.WriteAllText(configurationFilePath, JsonSerializer.Serialize(appConfig));
+            configuration = RunWebScraperConfigurationGuide();
+            File.WriteAllText(configurationFilePath, JsonSerializer.Serialize(configuration));
         }
 
-        return appConfig.BuildWebScraperConfiguration();
+        return configuration.BuildWebScraperConfiguration();
     }
 
-    private static ApplicationConfiguration RunConfigurationGuide()
+    private static EmailNotificationConfiguration GetEmailConfiguration()
     {
+        var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ConfigurationDirectoryName);
+        System.IO.Directory.CreateDirectory(folderPath);
+        var configurationFilePath = Path.Combine(folderPath, SerializedEmailNotificationConfiguration);
+
+        EmailNotificationConfiguration? configuration = null;
+        if (File.Exists(configurationFilePath))
+        {
+            var jsonText = File.ReadAllText(configurationFilePath);
+            configuration = JsonSerializer.Deserialize<EmailNotificationConfiguration>(jsonText);
+        }
+
+        if (configuration is null)
+        {
+            configuration = RunEmailConfigurationGuide();
+            File.WriteAllText(configurationFilePath, JsonSerializer.Serialize(configuration));
+        }
+
+        return configuration;
+    }
+
+    private static EmailNotificationConfiguration RunEmailConfigurationGuide()
+    {
+        using SmtpClient smtpClient = new();
+
+        var tryConnectingToServer = (string host, int port) =>
+        {
+            try
+            {
+                ConsoleHelper.WaitForTask(() => smtpClient.Connect(host, port), "Trying to connect to the server.");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.WriteLine($"Connection failed due to: {ex.Message}");
+                return false;
+            }
+
+            return true;
+        };
+
+        AnsiConsole.Write(new FigletText("Email Notifications Configuration Guide")
+            .LeftJustified()
+            .Color(Color.Teal));
+
+        // Get the server address from user
+        string host;
+        int port;
+        do
+        {
+            host = AnsiConsole.Ask<string>("SMTP host address:");
+            port = AnsiConsole.Ask<int>("SMTP port: ");
+        } while (!tryConnectingToServer(host, port));
+
+        // disconnect for later authentication test connection
+        smtpClient.Disconnect(true);
+
+        var tryAuthenticating = (string username, string password) =>
+        {
+            try
+            {
+                ConsoleHelper.WaitForTask(() => smtpClient.Connect(host, port), "Trying to connect to the server.");
+                ConsoleHelper.WaitForTask(() => smtpClient.Authenticate(username, password), "Trying to authenticate to the server.");
+                ConsoleHelper.WaitForTask(() => smtpClient.Disconnect(true), "Trying to authenticate to the server.");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.WriteLine($"Authenticating failed due to: {ex.Message}");
+                return false;
+            }
+
+            return true;
+        };
+
+        // Get the User credentials
+        string userName;
+        string password;
+        do
+        {
+            userName = AnsiConsole.Ask<string>("Username:");
+            password = AnsiConsole.Ask<string>("password:");
+        } while (!tryAuthenticating(userName, password));
+
+        var senderAddress = AnsiConsole.Prompt(new TextPrompt<string>("Mailbox address of the notification sender:")
+            .DefaultValue(userName)
+            .Validate(a => MailboxAddress.TryParse(a, out var _), "The mail address is incorrect."));
+
+        // Get the recipient address
+        var recipient = AnsiConsole.Prompt(new TextPrompt<string>("Mailbox address of the notification recipient:")
+            .Validate( a => MailboxAddress.TryParse(a, out var _), "The mail address is incorrect."));
+
+        return new(new(userName, password, host, port, senderAddress), recipient);
+    }
+
+    private static SerializableWebScraperConfiguration RunWebScraperConfigurationGuide()
+    {
+        AnsiConsole.Write(new FigletText("Web Scraper Configuration Guide")
+            .LeftJustified()
+            .Color(Color.Teal));
+
         // Get a valid connection string
         var dbConnectionString = AnsiConsole.Prompt(new TextPrompt<string>("Enter a MSSQL Server database connection string:\n").Validate(cs =>
         {
@@ -64,12 +178,13 @@ internal static class ConfigurationGuide
         } while (AnsiConsole.Confirm("Do you want to add another scraping job?"));
 
         // Get the last configurations and create a configured application configuration instance
-        return new ApplicationConfiguration(scrapingJobs, dbConnectionString)
+        return new SerializableWebScraperConfiguration(scrapingJobs)
         {
             ScrapePeriod = TimeSpan.FromSeconds(AnsiConsole.Prompt(new TextPrompt<int>("Enter a scraping period in minutes:")
                 .Validate(period => period > 0, "The value must be positive."))),
             StoragePeriod = TimeSpan.FromDays(AnsiConsole.Prompt(new TextPrompt<int>("Enter a storage period (for how many days should be the ended auction records stored):")
                 .Validate(period => period > 0, "The value must be positive."))),
+            DbConnectionString = dbConnectionString,
         };
     }
 

@@ -1,9 +1,14 @@
 ﻿using Application;
+using HtmlAgilityPack;
+using MailSender;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Spectre.Console;
+using System.Security.Policy;
 using WebScraper;
+using WebScraper.Notifications;
 
 AnsiConsole.Write(
     new FigletText("Auction Web Scraper")
@@ -11,18 +16,24 @@ AnsiConsole.Write(
         .Color(Color.Teal));
 
 // Get the user defined configuration
-var webScraperConfig = ConfigurationGuide.GetConfiguration(); // TODO: get the email configuration.
+var applicationConfiguration = ConfigurationGuide.GetConfiguration(); // TODO: get the email configuration.
+var emailNotificationConfiguration = applicationConfiguration.EmailNotificationConfiguration;
+
+// Create a email notifier
+EmailNotifier emailNotifier = new(
+    new MailKitSender(emailNotificationConfiguration.SmtpConfiguration),
+    emailNotificationConfiguration.Recipient);
 
 // Create and configure the application host builder
 var hostBuilder = Host.CreateDefaultBuilder();
 hostBuilder.ConfigureServices(services =>
 {
-    services.AddLogging(configure => configure.AddConsole()) ;
-    //services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Trace)) ;
+    services.AddLogging(configure => configure.AddConsole());
+    //services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Trace)) ; // TODO:
 });
 
 // Create the web scraper startup instance
-Startup startup = new(webScraperConfig); // TODO: add emailNotifier
+Startup startup = new(applicationConfiguration.WebScraperConfiguration, emailNotifier);
 startup.ConfigureHostBuilder(hostBuilder);
 
 // Start the application host and wait for a shutdown
