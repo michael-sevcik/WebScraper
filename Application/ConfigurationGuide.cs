@@ -1,5 +1,6 @@
 ﻿using Application.Configuration;
 using Application.Parsing;
+using Application.Utilities;
 using Downloader;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
