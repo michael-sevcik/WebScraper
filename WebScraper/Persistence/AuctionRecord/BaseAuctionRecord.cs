@@ -1,4 +1,6 @@
-﻿namespace WebScraper.Persistence.AuctionRecord;
+﻿using System.Text.Json.Serialization;
+
+namespace WebScraper.Persistence.AuctionRecord;
 
 /// <summary>
 /// Base implementation of any auction <c>record</c> entity.
@@ -8,6 +10,7 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets the id of the record.
     /// </summary>
+    [JsonIgnore]
     public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
@@ -38,6 +41,7 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets a value indicating whether an auction that this record represents has ended.
     /// </summary>
+    [JsonIgnore]
     public bool Ended => this.EndOfAuction <= DateTime.Now;
 
     /// <summary>
