@@ -84,7 +84,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
                 }
 
                 // Update the stored record.
-                await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri); // TODO: same id
+                await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
             }
         }
         else

@@ -47,7 +47,7 @@ public class Startup
             // Use the specified notifier if it was provided, otherwise use the default logging one.
             if (this.specifiedNotifier is not null)
             {
-                services.AddSingleton(this.specifiedNotifier); // TODO: Check thread safety
+                services.AddSingleton(this.specifiedNotifier);
             }
             else
             {

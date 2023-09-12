@@ -16,7 +16,7 @@ AnsiConsole.Write(
         .Color(Color.Teal));
 
 // Get the user defined configuration
-var applicationConfiguration = ConfigurationGuide.GetConfiguration(); // TODO: get the email configuration.
+var applicationConfiguration = ConfigurationGuide.GetConfiguration();
 var emailNotificationConfiguration = applicationConfiguration.EmailNotificationConfiguration;
 
 // Create a email notifier
@@ -29,7 +29,6 @@ var hostBuilder = Host.CreateDefaultBuilder();
 hostBuilder.ConfigureServices(services =>
 {
     services.AddLogging(configure => configure.AddConsole());
-    //services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Trace)) ; // TODO:
 });
 
 // Create the web scraper startup instance
