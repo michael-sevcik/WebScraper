@@ -166,7 +166,7 @@ internal static class ConfigurationGuide
         // Get the last configurations and create a configured application configuration instance
         return new SerializableWebScraperConfiguration(scrapingJobs)
         {
-            ScrapePeriod = TimeSpan.FromSeconds(AnsiConsole.Prompt(new TextPrompt<int>("Enter a scraping period in minutes:")
+            ScrapePeriod = TimeSpan.FromMinutes(AnsiConsole.Prompt(new TextPrompt<int>("Enter a scraping period in minutes:")
                 .Validate(period => period > 0, "The value must be positive."))),
             StoragePeriod = TimeSpan.FromDays(AnsiConsole.Prompt(new TextPrompt<int>("Enter a storage period (for how many days should be the ended auction records stored):")
                 .Validate(period => period > 0, "The value must be positive."))),
