@@ -46,7 +46,7 @@ internal static class ConfigurationGuide
 
         if (configuration is null)
         {
-            configuration = RunWebScraperConfigurationGuide();
+            configuration = RunWebScrapingConfigurationGuide();
             File.WriteAllText(configurationFilePath, JsonSerializer.Serialize(configuration));
         }
 
@@ -147,29 +147,14 @@ internal static class ConfigurationGuide
         return new(new(userName, password, host, port, senderAddress), recipient);
     }
 
-    private static SerializableWebScraperConfiguration RunWebScraperConfigurationGuide()
+    private static SerializableWebScraperConfiguration RunWebScrapingConfigurationGuide()
     {
         AnsiConsole.Write(new FigletText("Web Scraper Configuration Guide")
             .LeftJustified()
             .Color(Color.Teal));
 
         // Get a valid connection string
-        var dbConnectionString = AnsiConsole.Prompt(new TextPrompt<string>("Enter a MSSQL Server database connection string:\n").Validate(cs =>
-        {
-            try
-            {
-                var factory = SqlClientFactory.Instance;
-                using var connection = factory.CreateConnection() ?? throw new Exception();
-                connection.ConnectionString = cs;
-                connection.Open();
-            }
-            catch (Exception ex)
-            {
-                return ValidationResult.Error($"Db Connection using the entered connection string could not be established. {ex.Message}");
-            }
-
-            return ValidationResult.Success();
-        }));
+        var dbConnectionString = GetConnectionString(); 
 
         // Get the scraping job definitions
         List<SerializableScrapingJobDefinition> scrapingJobs = new();
@@ -187,6 +172,28 @@ internal static class ConfigurationGuide
                 .Validate(period => period > 0, "The value must be positive."))),
             DbConnectionString = dbConnectionString,
         };
+    }
+
+    private static string GetConnectionString()
+    {
+        var dbConnectionString = AnsiConsole.Prompt(new TextPrompt<string>("Enter a MSSQL Server database connection string:\n").Validate(cs =>
+        {
+            try
+            {
+                var factory = SqlClientFactory.Instance;
+                using var connection = factory.CreateConnection() ?? throw new Exception();
+                connection.ConnectionString = cs;
+                connection.Open();
+            }
+            catch (Exception ex)
+            {
+                return ValidationResult.Error($"Db Connection using the entered connection string could not be established. {ex.Message}");
+            }
+
+            return ValidationResult.Success();
+        }));
+
+        return dbConnectionString;
     }
 
     private static SerializableScrapingJobDefinition GetScrapingJob()
