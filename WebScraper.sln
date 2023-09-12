@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender", "MailSender\Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{82ADF2C7-E2BE-49E2-B30B-EFE4496687A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScraperTests", "WebScraperTests\WebScraperTests.csproj", "{EC149067-52DA-44C5-90ED-33072D796039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebScraperTests", "WebScraperTests\WebScraperTests.csproj", "{EC149067-52DA-44C5-90ED-33072D796039}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
