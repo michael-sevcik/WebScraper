@@ -47,7 +47,6 @@ public class ProductPageProcessor : IProductPageProcessor
             return new ParsedProductPage()
             {
                 Price = htmlDocument.QuerySelector(configuration.PriceCssSelector).InnerText,
-                Created = DateTime.Now,
                 EndOfAuction = endAuctionDate,
                 Name = htmlDocument.QuerySelector(configuration.NameCssSelector).InnerText,
                 UniqueIdentifier = htmlDocument.QuerySelector(configuration.UniqueIdentificationCssSelector).InnerText,

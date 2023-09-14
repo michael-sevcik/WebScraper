@@ -13,6 +13,7 @@ using WebScraper.Persistence;
 using WebScraper.Persistence.AuctionRecord;
 using WebScraper.Persistence.UnitOfWork;
 using WebScraper.Scraping;
+using WebScraper.Utils;
 
 namespace WebScraper;
 
@@ -58,10 +59,10 @@ public class Startup
             options => options.UseSqlServer(this.config.SqlServerConnectionString));
 
             services.AddScoped<IAuctionRecordRepository, DbAuctionRecordRepository>();
-
             services.AddScoped<IAuctionRecordManager, AuctionRecordManager>();
             services.AddScoped<IUnitOfWork, ScraperUnitOfWork>();
 
+            services.AddSingleton<IDateTimeProvider, IDateTimeProvider>();
             services.AddSingleton<IUnitOfWorkProvider, UnitOfWorkProvider>();
             services.AddSingleton<JobScheduler>();
             services.AddSingleton<IProductPageLinkHandlerFactory, ProductPageLinkHandlerFactory>();

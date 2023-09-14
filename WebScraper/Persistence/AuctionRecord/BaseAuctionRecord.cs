@@ -39,12 +39,6 @@ public class BaseAuctionRecord
     public string UniqueIdentifier { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets a value indicating whether an auction that this record represents has ended.
-    /// </summary>
-    [JsonIgnore]
-    public bool Ended => this.EndOfAuction <= DateTime.Now;
-
-    /// <summary>
     /// Gets the Uri of the auction page.
     /// </summary>
     public string Uri { get; init; } = string.Empty;

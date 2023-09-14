@@ -61,7 +61,7 @@ internal sealed class JobScheduler
             .ForJob(AuctionEndingUpdateJob.Key)
             .Build();
 
-        this.logger.LogTrace($"Scheduling an update job for the product on page {link}. The job start: {jobStart}");
+        this.logger.LogInformation($"Scheduling an update job for the product on page {link}. The job start: {jobStart}");
 
         // Schedule the job
         await this.scheduler.ScheduleJob(trigger);

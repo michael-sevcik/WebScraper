@@ -1,10 +1,12 @@
-﻿using System.Text.Encodings.Web;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 using Microsoft.Extensions.Logging;
 using WebScraper.JobScheduling;
 using WebScraper.Notifications;
 using WebScraper.Scraping;
+using WebScraper.Utils;
 
 namespace WebScraper.Persistence.AuctionRecord;
 
@@ -18,6 +20,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
     private readonly JobScheduler jobScheduler;
     private readonly IAuctionRecordRepository recordRepository;
     private readonly INotifier notifier;
+    private readonly IDateTimeProvider dateTimeProvider;
     private readonly JsonSerializerOptions jsonSerializerOptions = new()
     {
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
@@ -31,16 +34,19 @@ internal class AuctionRecordManager : IAuctionRecordManager
     /// <param name="scheduler">Scheduler for scheduling update jobs.</param>
     /// <param name="notifier">Object that handles sending of the notifications.</param>
     /// <param name="recordRepository">A repository that should be used for storing the auction records.</param>
+    /// <param name="dateTimeProvider">The provider of date and time.</param>
     public AuctionRecordManager(
         ILogger<AuctionRecordManager> logger,
         JobScheduler scheduler,
         IAuctionRecordRepository recordRepository,
-        INotifier notifier)
+        INotifier notifier,
+        IDateTimeProvider dateTimeProvider)
     {
         this.logger = logger;
         this.jobScheduler = scheduler;
         this.recordRepository = recordRepository;
         this.notifier = notifier;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     /// <inheritdoc/>
@@ -53,7 +59,8 @@ internal class AuctionRecordManager : IAuctionRecordManager
         if (storedRecord is not null)
         {
             // If the auction item already has an record, check whether the previous auction has ended.
-            if (storedRecord.Ended && parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
+            if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
+                parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
             {
                 // Send a notification.
                 string message = $"""
@@ -89,7 +96,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         }
         else
         {
-            var newAuctionRecord = CreateAuctionRecord(parsedProductPage, sourceUri);
+            var newAuctionRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri);
             await this.recordRepository.AddAsync(newAuctionRecord);
 
             await this.jobScheduler.ScheduleUpdateJobAsync(
@@ -103,17 +110,18 @@ internal class AuctionRecordManager : IAuctionRecordManager
     /// <inheritdoc/>
     public async Task UpdateAuctionRecordAsync(Guid id, ParsedProductPage parsedProductPage, Uri sourceUri)
     {
-        var updatedRecord = CreateAuctionRecord(parsedProductPage, sourceUri, id);
+        var updatedRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri, id);
 
         this.logger.LogTrace("Updating the record with id {id} and URI {sourceUri}", id, sourceUri);
         await this.recordRepository.UpdateAsync(updatedRecord);
     }
 
-    private static BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid? id = null)
+    private BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid? id = null)
         => new()
         {
             Id = id ?? Guid.NewGuid(),
             EndOfAuction = parsingResult.EndOfAuction,
+            Created = this.dateTimeProvider.Now,
             Name = parsingResult.Name,
             Price = parsingResult.Price,
             UniqueIdentifier = parsingResult.UniqueIdentifier,

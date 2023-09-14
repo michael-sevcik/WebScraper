@@ -2,6 +2,7 @@
 using WebScraper.Configuration;
 using WebScraper.Persistence.UnitOfWork;
 using WebScraper.Scraping;
+using WebScraper.Utils;
 
 namespace WebScraper.Jobs;
 
@@ -26,13 +27,15 @@ internal sealed class DeleteOldRecordsJob : IJob
     public static readonly string StoragePeriodKey = "StoragePeriod";
 
     private readonly IUnitOfWorkProvider unitOfWorkProvider;
+    private readonly IDateTimeProvider dateTimeProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteOldRecordsJob"/> class.
     /// </summary>
     /// <param name="unitOfWorkProvider">The unit of work to be used in the execute method.</param>
-    public DeleteOldRecordsJob(IUnitOfWorkProvider unitOfWorkProvider)
-        => this.unitOfWorkProvider = unitOfWorkProvider;
+    /// <param name="dateTimeProvider">The provider of date and time.</param>
+    public DeleteOldRecordsJob(IUnitOfWorkProvider unitOfWorkProvider, IDateTimeProvider dateTimeProvider)
+        => (this.unitOfWorkProvider, this.dateTimeProvider) = (unitOfWorkProvider, dateTimeProvider);
 
     /// <inheritdoc/>
     public async Task Execute(IJobExecutionContext context)
@@ -42,7 +45,7 @@ internal sealed class DeleteOldRecordsJob : IJob
         using var scopedUnitOfWork = this.unitOfWorkProvider.CreateScopedUnitOfWork();
         var repository = scopedUnitOfWork.UnitOfWork.AuctionRecordRepository;
 
-        var recordsToDelete = await repository.GetAllEndingToDateAsync(DateTime.Now - storagePeriod);
+        var recordsToDelete = await repository.GetAllEndingToDateAsync(this.dateTimeProvider.Now - storagePeriod);
         foreach (var record in recordsToDelete)
         {
             await repository.DeleteAsync(record.Id);

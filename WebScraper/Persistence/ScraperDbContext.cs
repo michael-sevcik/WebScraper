@@ -46,7 +46,6 @@ public sealed class ScraperDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.OwnsMany(e => e.AdditionalInfromation).ToJson();
-            entity.Ignore(e => e.Ended);
         });
     }
 }
