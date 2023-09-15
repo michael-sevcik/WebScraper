@@ -16,7 +16,6 @@ internal class DbAuctionRecordRepository : IAuctionRecordRepository
     /// <param name="dbContext">The db context that should be used to store the records.</param>
     public DbAuctionRecordRepository(ScraperDbContext dbContext)
     {
-        dbContext.Database.EnsureCreated();
         this.records = dbContext.AuctionRecords;
     }
 
