@@ -8,11 +8,6 @@ namespace WebScraper.Scraping;
 public class ParsedProductPage
 {
     /// <summary>
-    /// Gets the record's time of creation.
-    /// </summary>
-    public DateTime Created { get; init; } = DateTime.Now;
-
-    /// <summary>
     /// Gets the time when the auction will end.
     /// </summary>
     public DateTime EndOfAuction { get; init; }
