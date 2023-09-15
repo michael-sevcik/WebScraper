@@ -54,14 +54,16 @@ internal sealed class JobScheduler
             { AuctionEndingUpdateJob.PageProcessorKey, pageProcessor },
         };
 
+        var startTime = jobStart - TimeReserve;
+
         // Create a trigger
         var trigger = TriggerBuilder.Create()
-            .StartAt(jobStart - TimeReserve)
+            .StartAt(startTime)
             .UsingJobData(jobDataMap)
             .ForJob(AuctionEndingUpdateJob.Key)
             .Build();
 
-        this.logger.LogInformation($"Scheduling an update job for the product on page {link}. The job start: {jobStart}");
+        this.logger.LogInformation($"Scheduling an update job for the product on page {link}. The job start: {startTime}");
 
         // Schedule the job
         await this.scheduler.ScheduleJob(trigger);
