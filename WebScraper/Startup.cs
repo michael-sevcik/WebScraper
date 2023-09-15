@@ -62,7 +62,7 @@ public class Startup
             services.AddScoped<IAuctionRecordManager, AuctionRecordManager>();
             services.AddScoped<IUnitOfWork, ScraperUnitOfWork>();
 
-            services.AddSingleton<IDateTimeProvider, IDateTimeProvider>();
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddSingleton<IUnitOfWorkProvider, UnitOfWorkProvider>();
             services.AddSingleton<JobScheduler>();
             services.AddSingleton<IProductPageLinkHandlerFactory, ProductPageLinkHandlerFactory>();
