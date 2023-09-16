@@ -6,7 +6,7 @@ namespace WebScraper.Notifications;
 /// <summary>
 /// An implementation of <see cref="INotifier"/> that sends the notifications using an instance of <see cref="IMailSender"/>.
 /// </summary>
-internal class EmailNotifier : INotifier
+public class EmailNotifier : INotifier
 {
     private readonly IMailSender mailSender;
     private readonly MailboxAddress recipient;
