@@ -38,6 +38,7 @@ public class Startup
     /// Configures the host builder to do web scraping according to the provided configuration.
     /// </summary>
     /// <param name="hostBuilder">The host builder to configure.</param>
+    /// <exception cref="Exception">There is a problem with instantiating <see cref="ScraperDbContext"/>. See inner exception.</exception>
     public void ConfigureHostBuilder(IHostBuilder hostBuilder)
         => hostBuilder.ConfigureServices(services =>
         {
@@ -64,11 +65,20 @@ public class Startup
 
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddSingleton<IUnitOfWorkProvider, UnitOfWorkProvider>();
-            services.AddSingleton<JobScheduler>();
+            services.AddSingleton<IJobScheduler, JobScheduler>();
             services.AddSingleton<IProductPageLinkHandlerFactory, ProductPageLinkHandlerFactory>();
             services.AddSingleton<WebScraper>();
 
             this.AddQuartzServices(services);
+
+            var serviceProvider = services.BuildServiceProvider();
+            var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+            using var serviceScope = serviceScopeFactory.CreateScope();
+            var dbContext = serviceScope.ServiceProvider.GetService<ScraperDbContext>()
+                ?? throw new("DbContext cannot be created.");
+
+            dbContext?.Database.EnsureCreated();
+            dbContext?.SaveChanges();
         });
 
     private void AddQuartzServices(IServiceCollection services)

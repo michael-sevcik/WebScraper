@@ -17,7 +17,7 @@ namespace WebScraper.Persistence.AuctionRecord;
 internal class AuctionRecordManager : IAuctionRecordManager
 {
     private readonly ILogger logger;
-    private readonly JobScheduler jobScheduler;
+    private readonly IJobScheduler jobScheduler;
     private readonly IAuctionRecordRepository recordRepository;
     private readonly INotifier notifier;
     private readonly IDateTimeProvider dateTimeProvider;
@@ -37,7 +37,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
     /// <param name="dateTimeProvider">The provider of date and time.</param>
     public AuctionRecordManager(
         ILogger<AuctionRecordManager> logger,
-        JobScheduler scheduler,
+        IJobScheduler scheduler,
         IAuctionRecordRepository recordRepository,
         INotifier notifier,
         IDateTimeProvider dateTimeProvider)
