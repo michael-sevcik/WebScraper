@@ -63,6 +63,26 @@ namespace WebScraperTests {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] DbScraperExpectedResult {
+            get {
+                object obj = ResourceManager.GetObject("DbScraperExpectedResult", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ExpectedDetailsOfScheduledJobs {
+            get {
+                object obj = ResourceManager.GetObject("ExpectedDetailsOfScheduledJobs", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] webPages {
             get {
                 object obj = ResourceManager.GetObject("webPages", resourceCulture);

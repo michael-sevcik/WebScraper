@@ -1,7 +1,7 @@
 ﻿using Downloader;
 using HtmlAgilityPack;
 
-namespace WebScraperTests
+namespace WebScraperTests.Mocks
 {
     internal class MockHtmlDownloader : IHtmlDownloader
     {
@@ -12,7 +12,7 @@ namespace WebScraperTests
 
         public Task<HtmlDocument> GetPageDocumentAsync(Uri pageUri)
         {
-            if (this.pagesByUri.TryGetValue(pageUri.AbsoluteUri, out var page)) 
+            if (pagesByUri.TryGetValue(pageUri.AbsoluteUri, out var page))
             {
                 HtmlDocument document = new();
                 document.LoadHtml(page);
