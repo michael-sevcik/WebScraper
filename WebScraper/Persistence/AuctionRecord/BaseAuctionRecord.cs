@@ -16,6 +16,7 @@ public class BaseAuctionRecord
     /// <summary>
     /// Gets the record's time of creation.
     /// </summary>
+    [JsonIgnore]
     public DateTime Created { get; init; } = DateTime.Now;
 
     /// <summary>
