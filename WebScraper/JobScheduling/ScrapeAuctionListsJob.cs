@@ -5,19 +5,19 @@ namespace WebScraper.Jobs;
 /// <summary>
 /// Job that scrapes the auction lists, stores the new auctions and notifies about possible readded auction items.
 /// </summary>
-internal class CheckAuctionListsJob : IJob
+internal class ScrapeAuctionListsJob : IJob
 {
     /// <summary>
     /// The key of the quartz job.
     /// </summary>
-    public static readonly JobKey Key = new(nameof(CheckAuctionListsJob));
+    public static readonly JobKey Key = new(nameof(ScrapeAuctionListsJob));
     private readonly WebScraper webScraper;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CheckAuctionListsJob"/> class.
+    /// Initializes a new instance of the <see cref="ScrapeAuctionListsJob"/> class.
     /// </summary>
     /// <param name="webScraper">The web scraper to run.</param>
-    public CheckAuctionListsJob(WebScraper webScraper)
+    public ScrapeAuctionListsJob(WebScraper webScraper)
         => this.webScraper = webScraper;
 
     /// <inheritdoc/>
