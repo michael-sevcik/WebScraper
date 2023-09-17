@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Quartz;
 using System.Data;
 using System.Text.Json;
@@ -101,6 +102,7 @@ public class WebScraperTests
     /// In test container database should be only the newly scraped records and the historical should be deleted.
     /// </summary>
     /// <returns>A task object representing the asynchronous operation.</returns>
+    [NonParallelizable]
     [Test]
     public async Task TestScraping()
     {
@@ -115,7 +117,7 @@ public class WebScraperTests
         MockJobScheduler jobScheduler = new();
         hostBuilder.ConfigureServices(services =>
         {
-            services.AddLogging(x => x.AddConsole());
+            services.AddSingleton<ILoggerFactory>(new NullLoggerFactory());
             services.Replace(ServiceDescriptor.Singleton(this.mockDownloader));
             services.Replace(ServiceDescriptor.Singleton<IDateTimeProvider>(new MockDateTimeProvider(StartTime)));
             services.Replace(ServiceDescriptor.Singleton<IJobScheduler>(jobScheduler));
@@ -153,7 +155,7 @@ public class WebScraperTests
         var serializedAuctionRecords = JsonSerializer.Serialize(records);
 
         var serializedScheduledJobDetails = JsonSerializer.Serialize(jobScheduler.ScheduledJobs);
-        
+
         // Assert
         Assert.Multiple(() =>
         {
@@ -168,6 +170,7 @@ public class WebScraperTests
     /// </summary>
     /// <returns></returns>
     [Test]
+    [NonParallelizable]
     public async Task TestNotifying()
     {
         // Create and configure the application host builder
@@ -183,7 +186,7 @@ public class WebScraperTests
         // Replace some services for testing purposes.
         hostBuilder.ConfigureServices(services =>
         {
-            services.AddLogging(x => x.AddConsole());
+            services.AddSingleton<ILoggerFactory>(new NullLoggerFactory());
             services.Replace(ServiceDescriptor.Singleton(this.mockDownloader));
             services.Replace(ServiceDescriptor.Singleton<IDateTimeProvider>(new MockDateTimeProvider(StartTime)));
 
