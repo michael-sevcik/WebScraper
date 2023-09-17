@@ -1,6 +1,6 @@
 # Web Scraper
 
-This is a console and .NET based web scraper application for capturing readdition of identical items to auction sites, the auction sites have to be static pages, because this web scraper does not support JS loading yet. It provides a simple, easy to use configuration guide, implemented using (spectre console), futhermore the captured readditions are reported by email notifications. For selecting the relevant information the scraper uses CSS selectors.
+This is a console and .NET based web scraper application for capturing readdition of identical items to auction sites, the auction sites have to be static pages, because this web scraper does not support JS loading yet. It provides a simple, easy to use configuration guide, implemented using [Spectre.Console](https://spectreconsole.net/), furthermore the captured readditions are reported by email notifications. For selecting the relevant information the scraper uses CSS selectors.
 
 ## Configuration
 

@@ -5,19 +5,21 @@ Back to [readme](../README.md).
 # Web Scraper Program Documentation
 
 This application consists of 5 projects/modules:
-- [Web Scraper Program Documentation](#web-scraper-program-documentation)
-  - [Application](#application)
-  - [Downloader](#downloader)
-  - [WebScraper - module](#webscraper---module)
-    - [Jobs](#jobs)
-    - [WebScraping and processing](#webscraping-and-processing)
-  - [ProjectListCrawler](#projectlistcrawler)
-  - [MailSender](#mailsender)
-  - [WebScraperTests](#webscrapertests)
+- [Application](#application)
+- [Downloader](#downloader)
+- [WebScraper - module](#webscraper---module)
+- [Jobs](#jobs)
+- [WebScraping and processing](#webscraping-and-processing)
+- [ProjectListCrawler](#projectlistcrawler)
+- [MailSender](#mailsender)
+- [WebScraperTests](#webscrapertests)
 
-The lifetime of this application can be divided into parts:
+The lifetime of this application can be divided into two parts:
 
 - The configuration of the application
+- Running web scraper jobs by `Quartz.NET`
+
+For details, see following paragraphs.
 
 ## Application
 
@@ -27,7 +29,7 @@ It uses [Spectre.Console](https://spectreconsole.net/) for the configuration gui
 
 After the configuration process, the application starts the web scraper, which is implemented as [IHostedService](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostedservice?view=dotnet-plat-ext-7.0).
 
-For details see [Program.cs](../Application/Program.cs).
+For details, see [Program.cs](../Application/Program.cs).
 
 ## Downloader
 
@@ -57,8 +59,8 @@ When the `WebScraper.ScrapeAsync` method is called, it starts the scraping proce
         ITargetBlock<ProductPageParsingResult> targetBlock,
         CancellationToken cancellationToken);
   ```
-  The `productPageActionBlock` is used as the `targetBlock` parameter of the `HandleLinksAsync` method. After the `productPageActionBlock` is completed, the unit of work is completed, which in the default implementation means that the `SaveChanges` method of the [database context](../WebScraper/Persistence/ScraperDbContext.cs). The database context is derived from the abstract `DbContext` class that comes from [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/). EF core is used to create the database and to store the scraped data in it.
-- When the `AuctionRecordManager` gets the newly scraped record, it is compared with the record that is already in the database. If the record is not in the database, it is added to the database and an `AuctionEndingUpdateJob` is scheduled for it. If the record is already in the database as a record of already ended auction, a notification about a readdition is sent, then the record is updated and the `AuctionEndingUpdateJob` is rescheduled for it.
+  The `productPageActionBlock` is used as the `targetBlock` parameter of the `HandleLinksAsync` method. After the `productPageActionBlock` is completed, the unit of work is completed, which in the default implementation means that the `SaveChanges` method of the [database context](../WebScraper/Persistence/ScraperDbContext.cs) is called. The database context is derived from the abstract `DbContext` class that comes from [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/). EF core is used to create the database and to store the scraped data in it.
+- When the `AuctionRecordManager` gets the newly scraped record, the new record is compared with the records that are already in the database. If the record is not in the database, it is added to the database and an `AuctionEndingUpdateJob` is scheduled for it. If the record is already in the database as a record of already ended auction, a **notification about a readdition** is sent, then the record is updated and the `AuctionEndingUpdateJob` is rescheduled for it.
 
 ![Diagram of the scraping process](./DataFlowDiagram.drawio.svg)
 
