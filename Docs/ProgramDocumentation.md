@@ -31,7 +31,7 @@ For details see [Program.cs](../Application/Program.cs).
 
 ## Downloader
 
-The downloader is a module that is responsible for downloading the web pages, it is implemented as a [HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-5.0) wrapper and it uses [HAP](https://html-agility-pack.net/) to parse the incomming HTML.
+The downloader is a module that is responsible for downloading the web pages, it is implemented as a [HttpClient](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-5.0) wrapper and it uses [HAP](https://html-agility-pack.net/) to parse the incoming HTML.
 
 ## WebScraper - module
 
@@ -66,7 +66,7 @@ When the `WebScraper.ScrapeAsync` method is called, it starts the scraping proce
 
 This module is responsible for crawling the auction lists, it uses an instance of [IProductListProcessor](../ProductListCrawler/IProductListProcessor.cs) to process a product list page and get the address of the next product list page and the links to the product pages. The product pages are sent to a target block ([ITargetBlock](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.dataflow.itargetblock-1?view=net-7.0)).
 
-The defualt implementation of the `IProductListCrawler` is [ProductListCrawler](../ProductListCrawler/ProductListCrawler.cs).
+The default implementation of the `IProductListCrawler` is [ProductListCrawler](../ProductListCrawler/ProductListCrawler.cs).
 
 ## MailSender
 
