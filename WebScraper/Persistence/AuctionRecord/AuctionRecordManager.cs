@@ -58,7 +58,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier);
         if (storedRecord is not null)
         {
-            // If the auction item already has an record, check whether the previous auction has ended.
+            // If the auction item already has an existing stored record, check whether the previous auction has already ended.
             if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
                 parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
             {
@@ -92,6 +92,13 @@ internal class AuctionRecordManager : IAuctionRecordManager
 
                 // Update the stored record.
                 await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
+
+                // Schedule update job for the new record
+                await this.jobScheduler.ScheduleUpdateJobAsync(
+                parsedProductPage.EndOfAuction,
+                sourceUri,
+                storedRecord.Id,
+                productPageProcessor);
             }
         }
         else
