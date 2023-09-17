@@ -41,4 +41,4 @@ During scraping, when a new auction of item with an identical unique identifier 
 
 ## Architecture and used technologies
 
-If you are interested in the back-end of this application, or the functionality described above does not suit your needs and you want to reuse some of its infrastructure, see [the program documentation](Docs/ProgramDocumentation.md).   
+If you are interested in the backend of this application, or the functionality described above does not suit your needs and you want to reuse some of its infrastructure, see [the program documentation](Docs/ProgramDocumentation.md).   
