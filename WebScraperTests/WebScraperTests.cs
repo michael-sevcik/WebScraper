@@ -42,8 +42,6 @@ public class WebScraperTests
         // Create a test MSSQL server container for the web scraper
         var msSqlContainer = new MsSqlBuilder()
             .WithImage("mcr.microsoft.com/mssql/server:2019-CU18-ubuntu-20.04")
-            //.WithPassword("password")
-            //.WithName("name") // TODO: Is this the user setup?
             .Build();
 
         await msSqlContainer.StartAsync();

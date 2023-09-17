@@ -14,7 +14,7 @@ namespace WebScraper.Configuration;
 public interface IReadOnlyWebScraperConfig
 {
     /// <summary>
-    /// Gets the period of scraping. // TODO: Consider using timespan.
+    /// Gets the period of scraping.
     /// </summary>
     public TimeSpan ScrapePeriod { get; }
 

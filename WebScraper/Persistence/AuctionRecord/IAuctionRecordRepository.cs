@@ -40,7 +40,7 @@
         /// <summary>
         /// Gets asynchronously all the <see cref="BaseAuctionRecord"/> entities.
         /// </summary>
-        /// <param name="dateTime">The date used for filtering.</param> // TODO:
+        /// <param name="dateTime">The date used for filtering.</param>
         /// <returns>
         /// The task object representing the asynchronous operation. The Result property on the task object
         /// returns <see cref="IEnumerable{T}"/> containing all records.
@@ -48,7 +48,7 @@
         Task<IEnumerable<BaseAuctionRecord>> GetAllEndingToDateAsync(DateTime dateTime);
 
         /// <summary>
-        /// Asynchronously stores the new <paramref name="record"/>. // TODO: decide what should happen in case that the entity is already stored.
+        /// Asynchronously stores the new <paramref name="record"/>.
         /// </summary>
         /// <param name="record">The record to add.</param>
         /// <returns>The task object representing the asynchronous storing.</returns>
