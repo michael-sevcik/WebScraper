@@ -2,6 +2,12 @@
 
 This is a console and .NET based web scraper application for capturing readdition of identical items to auction sites, the auction sites have to be static pages, because this web scraper does not support JS loading yet. It provides a simple, easy to use configuration guide, implemented using [Spectre.Console](https://spectreconsole.net/), furthermore the captured readditions are reported by email notifications. For selecting the relevant information the scraper uses CSS selectors.
 
+## LEGAL DISCLAIMER
+
+Use this application only for educational purposes. The author of this application is not responsible for any damage caused by the use of this application. The author of this application does not encourage the use of this application for any illegal activities. The author of this application does not encourage the use of this application for any activities that violate the terms of use of the auction sites.
+
+See webscraping legal issues [here](https://en.wikipedia.org/wiki/Web_scraping#Legal_issues), [here](https://research.aimultiple.com/web-scraping-ethics/) and [here](https://en.wikipedia.org/wiki/Robots.txt).
+
 ## Configuration
 
 After starting the application, you will be greeted with the configuration guide. Enter the requested information.
