@@ -35,7 +35,7 @@ public class WebScraperTests
     [SetUp]
     public async Task Setup()
     {
-        // Create a mock date time provider and its methods in setting the testing quartz methods
+        // Create a mock date time provider and use its methods in setting the testing quartz static methods
         this.dateTimeProvider = new MockDateTimeProvider(StartTime);
         SystemTime.Now = () => this.dateTimeProvider.Now;
         SystemTime.UtcNow = () => this.dateTimeProvider.UtcNow;
@@ -199,7 +199,7 @@ public class WebScraperTests
             {
                 EndOfAuction = dateTimeProvider.Now - TimeSpan.FromDays(10),
                 Name = "Record of an ended auction",
-                UniqueIdentifier = "Palièkovaný obrázek dámy s kloboukem *333",
+                UniqueIdentifier = "Palikovan obrzek dmy s kloboukem *333",
             });
 
             context.SaveChanges();
