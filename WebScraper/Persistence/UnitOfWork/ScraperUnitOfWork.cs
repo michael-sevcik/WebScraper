@@ -5,7 +5,7 @@ namespace WebScraper.Persistence.UnitOfWork
     /// <summary>
     /// An implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    internal class ScraperUnitOfWork : IUnitOfWork
+    internal sealed class ScraperUnitOfWork : IUnitOfWork
     {
         private readonly ScraperDbContext context;
 
