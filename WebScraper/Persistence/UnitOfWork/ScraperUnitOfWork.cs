@@ -53,7 +53,7 @@ namespace WebScraper.Persistence.UnitOfWork
         /// Dispose method for derived entities.
         /// </summary>
         /// <param name="disposing">Are we disposing the derived object.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
