@@ -1,0 +1,1385 @@
+﻿{
+  "Version": 1,
+  "Properties": {
+    "AreNodeDescriptionsVisible": "True"
+  },
+  "Nodes": [
+    {
+      "Id": "1",
+      "Name": "IDateTimeProvider",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3744236Z",
+      "AbsoluteTopLeft": "1912.934,3196.3676",
+      "HeaderContentSize": "174.82,63.4",
+      "NodeTotalSize": "174.82,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IDateTimeProvider",
+        "FullName": "interface WebScraper.Utils.IDateTimeProvider",
+        "Symbols": [
+          "WebScraper.Utils.IDateTimeProvider"
+        ],
+        "Description": "Represents a class that provides time.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "2",
+      "Name": "Startup",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3754235Z",
+      "AbsoluteTopLeft": "2124.6648,3664.7228",
+      "HeaderContentSize": "177.8433,63.4",
+      "NodeTotalSize": "177.8433,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "Startup",
+        "FullName": "class WebScraper.Startup",
+        "Symbols": [
+          "WebScraper.Startup"
+        ],
+        "Description": "WebScraper.WebScraper startup class.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "3",
+      "Name": "IUnitOfWork",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3754235Z",
+      "AbsoluteTopLeft": "944.2164,3019.8741",
+      "HeaderContentSize": "307.7633,99.4",
+      "NodeTotalSize": "307.7633,99.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IUnitOfWork",
+        "FullName": "interface WebScraper.Persistence.UnitOfWork.IUnitOfWork",
+        "Symbols": [
+          "WebScraper.Persistence.UnitOfWork.IUnitOfWork"
+        ],
+        "Description": "Represents a unit of work, the work will be saved after calling M:WebScraper.Persistence.UnitOfWork.IUnitOfWork.Complete or M:WebScraper.Persistence.UnitOfWork.IUnitOfWork.CompleteAsync .",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode",
+        "IsDisposable": true
+      }
+    },
+    {
+      "Id": "5",
+      "Name": "WebScraperConfiguration",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3769212Z",
+      "AbsoluteTopLeft": "2280.0615,3800.0733",
+      "HeaderContentSize": "258.08,75.4",
+      "NodeTotalSize": "258.08,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "WebScraperConfiguration",
+        "FullName": "class WebScraper.Configuration.WebScraperConfiguration",
+        "Symbols": [
+          "WebScraper.Configuration.WebScraperConfiguration"
+        ],
+        "Description": "Encapsulates the configuration settings of a web scraper application.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "6",
+      "Name": "ScopedUnitOFWork",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3769212Z",
+      "AbsoluteTopLeft": "624.6748,2720.9049",
+      "HeaderContentSize": "263.52,79.4",
+      "NodeTotalSize": "263.52,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "ScopedUnitOFWork",
+        "FullName": "class WebScraper.Persistence.UnitOfWork.ScopedUnitOFWork",
+        "Symbols": [
+          "WebScraper.Persistence.UnitOfWork.ScopedUnitOFWork"
+        ],
+        "Description": "Service scope wrapper implementation of WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork .",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode",
+        "IsDisposable": true
+      }
+    },
+    {
+      "Id": "7",
+      "Name": "BaseAuctionRecord",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3774252Z",
+      "AbsoluteTopLeft": "312.6317,3490.7783",
+      "HeaderContentSize": "229.5467,63.4",
+      "NodeTotalSize": "229.5467,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "BaseAuctionRecord",
+        "FullName": "class WebScraper.Persistence.AuctionRecord.BaseAuctionRecord",
+        "Symbols": [
+          "WebScraper.Persistence.AuctionRecord.BaseAuctionRecord"
+        ],
+        "Description": "Base implementation of any auction record entity.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "8",
+      "Name": "IScopedUnitOfWork",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3774252Z",
+      "AbsoluteTopLeft": "653.1209,2565.5048",
+      "HeaderContentSize": "230.7267,75.4",
+      "NodeTotalSize": "230.7267,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IScopedUnitOfWork",
+        "FullName": "interface WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork",
+        "Symbols": [
+          "WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork"
+        ],
+        "Description": "Represents a scope wrapper around instance of WebScraper.Persistence.UnitOfWork.IUnitOfWork .",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode",
+        "IsDisposable": true
+      }
+    },
+    {
+      "Id": "9",
+      "Name": "AuctionRecordManager",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3774252Z",
+      "AbsoluteTopLeft": "1290.2481,3265.5833",
+      "HeaderContentSize": "309.8233,115.4",
+      "NodeTotalSize": "309.8233,115.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "AuctionRecordManager",
+        "FullName": "class WebScraper.Persistence.AuctionRecord.AuctionRecordManager",
+        "Symbols": [
+          "WebScraper.Persistence.AuctionRecord.AuctionRecordManager"
+        ],
+        "Description": "An implementation of the WebScraper.Persistence.AuctionRecord.IAuctionRecordManager that uses an instance of WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository to manage the records.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "10",
+      "Name": "IReadOnlyWebScraperConfig",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3784306Z",
+      "AbsoluteTopLeft": "2533.0437,4401.4455",
+      "HeaderContentSize": "294.2667,75.4",
+      "NodeTotalSize": "294.2667,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IReadOnlyWebScraperConfig",
+        "FullName": "interface WebScraper.Configuration.IReadOnlyWebScraperConfig",
+        "Symbols": [
+          "WebScraper.Configuration.IReadOnlyWebScraperConfig"
+        ],
+        "Description": "Represents a view on the configuration settings of a web scraper application.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "12",
+      "Name": "IAuctionRecordRepository",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3784306Z",
+      "AbsoluteTopLeft": "703.4633,3340.685",
+      "HeaderContentSize": "305.47,87.4",
+      "NodeTotalSize": "305.47,87.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IAuctionRecordRepository",
+        "FullName": "interface WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository",
+        "Symbols": [
+          "WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository"
+        ],
+        "Description": "Represents an auction record repository that enables storing and managing WebScraper.Persistence.AuctionRecord.BaseAuctionRecord entities.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "13",
+      "Name": "IProductPageProcessor",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3784306Z",
+      "AbsoluteTopLeft": "2278.4567,4414.4971",
+      "HeaderContentSize": "166.4133,63.4",
+      "NodeTotalSize": "166.4133,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IProductPageProcessor",
+        "FullName": "interface WebScraper.Scraping.IProductPageProcessor",
+        "Symbols": [
+          "WebScraper.Scraping.IProductPageProcessor"
+        ],
+        "Description": "Class for processing product pages.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "14",
+      "Name": "AuctionEndingUpdateJob",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3794305Z",
+      "AbsoluteTopLeft": "3337.5539,3902.2727",
+      "HeaderContentSize": "300.4733,79.4",
+      "NodeTotalSize": "300.4733,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "AuctionEndingUpdateJob",
+        "FullName": "class WebScraper.Jobs.AuctionEndingUpdateJob",
+        "Symbols": [
+          "WebScraper.Jobs.AuctionEndingUpdateJob"
+        ],
+        "Description": "Job that updates a record of an auction when the auction is about to end.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "15",
+      "Name": "ScrapingJobDefinition",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3794305Z",
+      "AbsoluteTopLeft": "2311.8912,4253.3643",
+      "HeaderContentSize": "309.83,75.4",
+      "NodeTotalSize": "309.83,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "ScrapingJobDefinition",
+        "FullName": "record WebScraper.Scraping.ScrapingJobDefinition",
+        "Symbols": [
+          "WebScraper.Scraping.ScrapingJobDefinition"
+        ],
+        "Description": "Represents an encapsulation of information describing a scraping of a particular product list.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "16",
+      "Name": "DbAuctionRecordRepository",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3804312Z",
+      "AbsoluteTopLeft": "690.1472,3508.085",
+      "HeaderContentSize": "303.3033,115.4",
+      "NodeTotalSize": "303.3033,115.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "DbAuctionRecordRepository",
+        "FullName": "class WebScraper.Persistence.AuctionRecord.DbAuctionRecordRepository",
+        "Symbols": [
+          "WebScraper.Persistence.AuctionRecord.DbAuctionRecordRepository"
+        ],
+        "Description": "Implementation of WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository that enables managing and storing of WebScraper.Persistence.AuctionRecord.BaseAuctionRecord entities using an instance of WebScraper.Persistence.ScraperDbContext .",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "17",
+      "Name": "IAuctionRecordManager",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3804312Z",
+      "AbsoluteTopLeft": "1322.0726,3122.1833",
+      "HeaderContentSize": "224.8567,63.4",
+      "NodeTotalSize": "224.8567,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IAuctionRecordManager",
+        "FullName": "interface WebScraper.Persistence.AuctionRecord.IAuctionRecordManager",
+        "Symbols": [
+          "WebScraper.Persistence.AuctionRecord.IAuctionRecordManager"
+        ],
+        "Description": "Represents a class for managing auction records.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "18",
+      "Name": "JobScheduler",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3804312Z",
+      "AbsoluteTopLeft": "1216.9211,3871.1076",
+      "HeaderContentSize": "204.24,79.4",
+      "NodeTotalSize": "204.24,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "JobScheduler",
+        "FullName": "class WebScraper.JobScheduling.JobScheduler",
+        "Symbols": [
+          "WebScraper.JobScheduling.JobScheduler"
+        ],
+        "Description": "Scheduler for scheduling update jobs. WebScraper.Jobs.AuctionEndingUpdateJob .",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "19",
+      "Name": "DeleteOldRecordsJob",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3814360Z",
+      "AbsoluteTopLeft": "2599.7082,3406.919",
+      "HeaderContentSize": "300.4733,79.4",
+      "NodeTotalSize": "300.4733,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "DeleteOldRecordsJob",
+        "FullName": "class WebScraper.Jobs.DeleteOldRecordsJob",
+        "Symbols": [
+          "WebScraper.Jobs.DeleteOldRecordsJob"
+        ],
+        "Description": "Job that updates a record of an auction when the auction is about to end.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "21",
+      "Name": "DateTimeProvider",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3824359Z",
+      "AbsoluteTopLeft": "1838.0452,3377.0259",
+      "HeaderContentSize": "295.4333,79.4",
+      "NodeTotalSize": "295.4333,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "DateTimeProvider",
+        "FullName": "class WebScraper.Utils.DateTimeProvider",
+        "Symbols": [
+          "WebScraper.Utils.DateTimeProvider"
+        ],
+        "Description": "Implementation of WebScraper.Utils.IDateTimeProvider that uses P:System.DateTime.Now .",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "22",
+      "Name": "ScraperUnitOfWork",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3824359Z",
+      "AbsoluteTopLeft": "1009.5215,3199.2741",
+      "HeaderContentSize": "230.7267,79.4",
+      "NodeTotalSize": "230.7267,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "ScraperUnitOfWork",
+        "FullName": "class WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork",
+        "Symbols": [
+          "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork"
+        ],
+        "Description": "An implementation of WebScraper.Persistence.UnitOfWork.IUnitOfWork .",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode",
+        "IsDisposable": true
+      }
+    },
+    {
+      "Id": "23",
+      "Name": "IProductPageLinkHandler",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3834363Z",
+      "AbsoluteTopLeft": "1709.9762,2876.7448",
+      "HeaderContentSize": "291.56,63.4",
+      "NodeTotalSize": "291.56,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IProductPageLinkHandler",
+        "FullName": "interface WebScraper.Scraping.IProductPageLinkHandler",
+        "Symbols": [
+          "WebScraper.Scraping.IProductPageLinkHandler"
+        ],
+        "Description": "Represents a class for handling the product (auction) page links.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "24",
+      "Name": "ScraperDbContext",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3835772Z",
+      "AbsoluteTopLeft": "442.779,3136.6524",
+      "HeaderContentSize": "305.47,87.4",
+      "NodeTotalSize": "305.47,87.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "ScraperDbContext",
+        "FullName": "class WebScraper.Persistence.ScraperDbContext",
+        "Symbols": [
+          "WebScraper.Persistence.ScraperDbContext"
+        ],
+        "Description": "Implementation of Microsoft.EntityFrameworkCore.DbContext that enables storing and managing WebScraper.Persistence.AuctionRecord.BaseAuctionRecord entities.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode",
+        "IsDisposable": true
+      }
+    },
+    {
+      "Id": "25",
+      "Name": "AdditionalInfromationPair",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:46:11.3835772Z",
+      "AbsoluteTopLeft": "5.8983,3584.1526",
+      "HeaderContentSize": "212.2633,63.4",
+      "NodeTotalSize": "212.2633,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "AdditionalInfromationPair",
+        "FullName": "class WebScraper.Persistence.AuctionRecord.AdditionalInfromationPair",
+        "Symbols": [
+          "WebScraper.Persistence.AuctionRecord.AdditionalInfromationPair"
+        ],
+        "Description": "Encapsulation of an information and its name.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "26",
+      "Name": "IProductPageLinkHandlerFactory",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:47:14.7548741Z",
+      "AbsoluteTopLeft": "2616.2039,4107.2007",
+      "HeaderContentSize": "286.6033,75.4",
+      "NodeTotalSize": "286.6033,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IProductPageLinkHandlerFactory",
+        "FullName": "interface WebScraper.Scraping.IProductPageLinkHandlerFactory",
+        "Symbols": [
+          "WebScraper.Scraping.IProductPageLinkHandlerFactory"
+        ],
+        "Description": "Represents a productPageLinkHandlerFactory class for creating instances of WebScraper.Scraping.IProductPageLinkHandler .",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "27",
+      "Name": "WebScraper",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:47:29.7041888Z",
+      "AbsoluteTopLeft": "2689.9846,3835.0853",
+      "HeaderContentSize": "255.2433,63.4",
+      "NodeTotalSize": "255.2433,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "WebScraper",
+        "FullName": "class WebScraper.WebScraper",
+        "Symbols": [
+          "WebScraper.WebScraper"
+        ],
+        "Description": "WebScraper class that handles scraping of web content.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "28",
+      "Name": "ScrapeAuctionListsJob",
+      "Stereotype": "Class",
+      "CreatedAtUtc": "2023-09-24T19:47:44.6585514Z",
+      "AbsoluteTopLeft": "2620.3165,3661.719",
+      "HeaderContentSize": "281.3067,79.4",
+      "NodeTotalSize": "281.3067,79.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "ScrapeAuctionListsJob",
+        "FullName": "class WebScraper.Jobs.ScrapeAuctionListsJob",
+        "Symbols": [
+          "WebScraper.Jobs.ScrapeAuctionListsJob"
+        ],
+        "Description": "Job that scrapes the auction lists, stores the new auctions and notifies about possible readded auction items.",
+        "IsDescriptionVisible": true,
+        "Accessibility": "Internal",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "29",
+      "Name": "IUnitOfWorkProvider",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:48:24.4872979Z",
+      "AbsoluteTopLeft": "3017.1981,3536.093",
+      "HeaderContentSize": "263.52,75.4",
+      "NodeTotalSize": "263.52,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IUnitOfWorkProvider",
+        "FullName": "interface WebScraper.Persistence.UnitOfWork.IUnitOfWorkProvider",
+        "Symbols": [
+          "WebScraper.Persistence.UnitOfWork.IUnitOfWorkProvider"
+        ],
+        "Description": "Represents a provider of a scoped instance of WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork .",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "30",
+      "Name": "IJobScheduler",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:49:06.4295389Z",
+      "AbsoluteTopLeft": "1208.2622,3727.7076",
+      "HeaderContentSize": "229.8733,63.4",
+      "NodeTotalSize": "229.8733,63.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IJobScheduler",
+        "FullName": "interface WebScraper.JobScheduling.IJobScheduler",
+        "Symbols": [
+          "WebScraper.JobScheduling.IJobScheduler"
+        ],
+        "Description": "Represents a class that schedules the update jobs.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    },
+    {
+      "Id": "31",
+      "Name": "IProductListCrawler",
+      "Stereotype": "Interface",
+      "CreatedAtUtc": "2023-09-24T19:49:46.3668252Z",
+      "AbsoluteTopLeft": "2995.2279,3885.2062",
+      "HeaderContentSize": "277.7333,75.4",
+      "NodeTotalSize": "277.7333,75.4",
+      "ChildrenAreaTopLeft": "1,0",
+      "IsPinned": true,
+      "Payload": {
+        "Discriminator": "RoslynType",
+        "SymbolName": "IProductListCrawler",
+        "FullName": "interface ProductListCrawler.IProductListCrawler",
+        "Symbols": [
+          "ProductListCrawler.IProductListCrawler"
+        ],
+        "Description": "Represents a helper class that provides a simple way to crawl through a list of products.",
+        "IsDescriptionVisible": true,
+        "IsAbstract": true,
+        "Accessibility": "Public",
+        "Origin": "SourceCode"
+      }
+    }
+  ],
+  "Connectors": [
+    {
+      "Id": "1",
+      "SourceNodeId": "19",
+      "TargetNodeId": "1",
+      "Stereotype": "Association",
+      "Route": [
+        "2613.7794,3406.919",
+        "2087.754,3253.5526"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Jobs.DeleteOldRecordsJob|Association|WebScraper.Utils.IDateTimeProvider",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "dateTimeProvider",
+              "Tooltip": "private readonly IDateTimeProvider dateTimeProvider",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Jobs.DeleteOldRecordsJob.dateTimeProvider"
+          }
+        ],
+        "TargetLabelCenter": "2111.7547,3260.5502"
+      }
+    },
+    {
+      "Id": "2",
+      "SourceNodeId": "9",
+      "TargetNodeId": "1",
+      "Stereotype": "Association",
+      "Route": [
+        "1600.0715,3296.7155",
+        "1912.934,3243.0587"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager|Association|WebScraper.Utils.IDateTimeProvider",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "dateTimeProvider",
+              "Tooltip": "private readonly IDateTimeProvider dateTimeProvider",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager.dateTimeProvider"
+          }
+        ],
+        "TargetLabelCenter": "1888.2938,3247.2846"
+      }
+    },
+    {
+      "Id": "3",
+      "SourceNodeId": "21",
+      "TargetNodeId": "1",
+      "Stereotype": "Implementation",
+      "Route": [
+        "1988.8304,3377.0259",
+        "1997.8938,3259.7676"
+      ],
+      "Payload": {
+        "Discriminator": "Other",
+        "Relationship": "WebScraper.Utils.DateTimeProvider|Implementation|WebScraper.Utils.IDateTimeProvider"
+      }
+    },
+    {
+      "Id": "4",
+      "SourceNodeId": "2",
+      "TargetNodeId": "5",
+      "Stereotype": "Association",
+      "Route": [
+        "2257.4337,3728.1228",
+        "2356.9551,3800.0733"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Startup|Association|WebScraper.Configuration.WebScraperConfiguration",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "config",
+              "Tooltip": "private readonly WebScraperConfiguration config"
+            },
+            "Symbol": "WebScraper.Startup.config"
+          }
+        ],
+        "TargetLabelCenter": "2336.6952,3785.4262"
+      }
+    },
+    {
+      "Id": "5",
+      "SourceNodeId": "22",
+      "TargetNodeId": "3",
+      "Stereotype": "Implementation",
+      "Route": [
+        "1118.6072,3199.2741",
+        "1105.957,3119.2741"
+      ],
+      "Payload": {
+        "Discriminator": "Other",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork|Implementation|WebScraper.Persistence.UnitOfWork.IUnitOfWork"
+      }
+    },
+    {
+      "Id": "6",
+      "SourceNodeId": "6",
+      "TargetNodeId": "3",
+      "Stereotype": "Association",
+      "Route": [
+        "800.3357,2800.3049",
+        "1043.139,3019.8741"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.ScopedUnitOFWork|Association|WebScraper.Persistence.UnitOfWork.IUnitOfWork",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "UnitOfWork",
+              "Tooltip": "public IUnitOfWork UnitOfWork { get; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.ScopedUnitOFWork.UnitOfWork"
+          }
+        ],
+        "TargetLabelCenter": "1024.5964,3003.1059"
+      }
+    },
+    {
+      "Id": "7",
+      "SourceNodeId": "8",
+      "TargetNodeId": "3",
+      "Stereotype": "Association",
+      "Route": [
+        "795.1293,2640.9048",
+        "1062.9718,3019.8741"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork|Association|WebScraper.Persistence.UnitOfWork.IUnitOfWork",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "UnitOfWork",
+              "Tooltip": "IUnitOfWork UnitOfWork { get; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork.UnitOfWork"
+          }
+        ],
+        "TargetLabelCenter": "1048.5427,2999.4584"
+      }
+    },
+    {
+      "Id": "8",
+      "SourceNodeId": "3",
+      "TargetNodeId": "17",
+      "Stereotype": "Association",
+      "Route": [
+        "1251.9797,3108.1399",
+        "1322.0726,3125.7066"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.IUnitOfWork|Association|WebScraper.Persistence.AuctionRecord.IAuctionRecordManager",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "AuctionRecordManager",
+              "Tooltip": "IAuctionRecordManager AuctionRecordManager { get; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.IUnitOfWork.AuctionRecordManager"
+          }
+        ],
+        "TargetLabelCenter": "1297.8226,3119.629"
+      }
+    },
+    {
+      "Id": "9",
+      "SourceNodeId": "3",
+      "TargetNodeId": "12",
+      "Stereotype": "Association",
+      "Route": [
+        "1059.9087,3119.2741",
+        "889.7773,3340.685"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.IUnitOfWork|Association|WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "AuctionRecordRepository",
+              "Tooltip": "IAuctionRecordRepository AuctionRecordRepository { get; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.IUnitOfWork.AuctionRecordRepository"
+          }
+        ],
+        "TargetLabelCenter": "905.0096,3320.8614"
+      }
+    },
+    {
+      "Id": "12",
+      "SourceNodeId": "5",
+      "TargetNodeId": "15",
+      "Stereotype": "Association",
+      "Route": [
+        "2413.9007,3875.4733",
+        "2462.0069,4253.3643"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Configuration.WebScraperConfiguration|Association|WebScraper.Scraping.ScrapingJobDefinition",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text1": "*",
+              "Text2": "ScrapingJobs",
+              "Tooltip": "public IReadOnlyCollection<ScrapingJobDefinition> ScrapingJobs { get; init; }"
+            },
+            "Symbol": "WebScraper.Configuration.WebScraperConfiguration.ScrapingJobs"
+          }
+        ],
+        "TargetLabelCenter": "2458.8498,4228.5645"
+      }
+    },
+    {
+      "Id": "13",
+      "SourceNodeId": "6",
+      "TargetNodeId": "8",
+      "Stereotype": "Implementation",
+      "Route": [
+        "759.4739,2720.9049",
+        "765.5982,2640.9048"
+      ],
+      "Payload": {
+        "Discriminator": "Other",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.ScopedUnitOFWork|Implementation|WebScraper.Persistence.UnitOfWork.IScopedUnitOfWork"
+      }
+    },
+    {
+      "Id": "14",
+      "SourceNodeId": "16",
+      "TargetNodeId": "7",
+      "Stereotype": "Association",
+      "Route": [
+        "690.1472,3549.9365",
+        "542.1783,3534.4728"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.DbAuctionRecordRepository|Association|WebScraper.Persistence.AuctionRecord.BaseAuctionRecord",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text1": "*",
+              "Text2": "records",
+              "Tooltip": "private readonly DbSet<BaseAuctionRecord> records"
+            },
+            "Symbol": "WebScraper.Persistence.AuctionRecord.DbAuctionRecordRepository.records"
+          }
+        ],
+        "TargetLabelCenter": "567.0429,3537.0713"
+      }
+    },
+    {
+      "Id": "15",
+      "SourceNodeId": "24",
+      "TargetNodeId": "7",
+      "Stereotype": "Association",
+      "Route": [
+        "574.0413,3224.0524",
+        "442.9813,3490.7783"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.ScraperDbContext|Association|WebScraper.Persistence.AuctionRecord.BaseAuctionRecord",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text1": "*",
+              "Text2": "AuctionRecords",
+              "Tooltip": "public DbSet<BaseAuctionRecord> AuctionRecords { get; set; }"
+            },
+            "Symbol": "WebScraper.Persistence.ScraperDbContext.AuctionRecords"
+          }
+        ],
+        "TargetLabelCenter": "454.0064,3468.3407"
+      }
+    },
+    {
+      "Id": "16",
+      "SourceNodeId": "7",
+      "TargetNodeId": "25",
+      "Stereotype": "Association",
+      "Route": [
+        "320.3371,3554.1783",
+        "218.1616,3584.4298"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.BaseAuctionRecord|Association|WebScraper.Persistence.AuctionRecord.AdditionalInfromationPair",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text1": "*",
+              "Text2": "AdditionalInfromation",
+              "Tooltip": "public List<AdditionalInfromationPair> AdditionalInfromation { get; init; }"
+            },
+            "Symbol": "WebScraper.Persistence.AuctionRecord.BaseAuctionRecord.AdditionalInfromation"
+          }
+        ],
+        "TargetLabelCenter": "242.133,3577.3325"
+      }
+    },
+    {
+      "Id": "17",
+      "SourceNodeId": "9",
+      "TargetNodeId": "12",
+      "Stereotype": "Association",
+      "Route": [
+        "1290.2481,3339.3546",
+        "1008.9333,3368.5396"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager|Association|WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "recordRepository",
+              "Tooltip": "private readonly IAuctionRecordRepository recordRepository"
+            },
+            "Symbol": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager.recordRepository"
+          }
+        ],
+        "TargetLabelCenter": "1033.7999,3365.9598"
+      }
+    },
+    {
+      "Id": "18",
+      "SourceNodeId": "9",
+      "TargetNodeId": "17",
+      "Stereotype": "Implementation",
+      "Route": [
+        "1441.5292,3265.5833",
+        "1436.4955,3185.5833"
+      ],
+      "Payload": {
+        "Discriminator": "Other",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager|Implementation|WebScraper.Persistence.AuctionRecord.IAuctionRecordManager"
+      }
+    },
+    {
+      "Id": "19",
+      "SourceNodeId": "10",
+      "TargetNodeId": "15",
+      "Stereotype": "Association",
+      "Route": [
+        "2625.8549,4401.4455",
+        "2521.1283,4328.7643"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Configuration.IReadOnlyWebScraperConfig|Association|WebScraper.Scraping.ScrapingJobDefinition",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text1": "*",
+              "Text2": "ScrapingJobs",
+              "Tooltip": "IReadOnlyList<ScrapingJobDefinition> ScrapingJobs { get; }"
+            },
+            "Symbol": "WebScraper.Configuration.IReadOnlyWebScraperConfig.ScrapingJobs"
+          }
+        ],
+        "TargetLabelCenter": "2541.6667,4343.0182"
+      }
+    },
+    {
+      "Id": "20",
+      "SourceNodeId": "16",
+      "TargetNodeId": "12",
+      "Stereotype": "Implementation",
+      "Route": [
+        "846.3791,3508.085",
+        "852.7294,3428.085"
+      ],
+      "Payload": {
+        "Discriminator": "Other",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.DbAuctionRecordRepository|Implementation|WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository"
+      }
+    },
+    {
+      "Id": "21",
+      "SourceNodeId": "22",
+      "TargetNodeId": "12",
+      "Stereotype": "Association",
+      "Route": [
+        "1051.5282,3278.6741",
+        "936.946,3340.685"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork|Association|WebScraper.Persistence.AuctionRecord.IAuctionRecordRepository",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "AuctionRecordRepository",
+              "Tooltip": "public IAuctionRecordRepository AuctionRecordRepository { get; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork.AuctionRecordRepository"
+          }
+        ],
+        "TargetLabelCenter": "958.9327,3328.786"
+      }
+    },
+    {
+      "Id": "22",
+      "SourceNodeId": "15",
+      "TargetNodeId": "13",
+      "Stereotype": "Association",
+      "Route": [
+        "2441.2546,4328.7643",
+        "2383.1484,4414.4971"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Scraping.ScrapingJobDefinition|Association|WebScraper.Scraping.IProductPageProcessor",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "ProductPageProcessor",
+              "Tooltip": "public IProductPageProcessor ProductPageProcessor { get; init; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Scraping.ScrapingJobDefinition.ProductPageProcessor"
+          }
+        ],
+        "TargetLabelCenter": "2397.1744,4393.8024"
+      }
+    },
+    {
+      "Id": "23",
+      "SourceNodeId": "22",
+      "TargetNodeId": "17",
+      "Stereotype": "Association",
+      "Route": [
+        "1240.2482,3207.2692",
+        "1322.0726,3184.7816"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork|Association|WebScraper.Persistence.AuctionRecord.IAuctionRecordManager",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "AuctionRecordManager",
+              "Tooltip": "public IAuctionRecordManager AuctionRecordManager { get; }",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork.AuctionRecordManager"
+          }
+        ],
+        "TargetLabelCenter": "1297.9664,3191.4067"
+      }
+    },
+    {
+      "Id": "24",
+      "SourceNodeId": "22",
+      "TargetNodeId": "24",
+      "Stereotype": "Association",
+      "Route": [
+        "1009.5215,3226.1989",
+        "748.249,3197.2661"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork|Association|WebScraper.Persistence.ScraperDbContext",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "context",
+              "Tooltip": "private readonly ScraperDbContext context"
+            },
+            "Symbol": "WebScraper.Persistence.UnitOfWork.ScraperUnitOfWork.context"
+          }
+        ],
+        "TargetLabelCenter": "773.0971,3200.0177"
+      }
+    },
+    {
+      "Id": "25",
+      "SourceNodeId": "14",
+      "TargetNodeId": "26",
+      "Stereotype": "Association",
+      "Route": [
+        "3345.3119,3981.6727",
+        "2894.8065,4107.2007"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Jobs.AuctionEndingUpdateJob|Association|WebScraper.Scraping.IProductPageLinkHandlerFactory",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "linkHandlerFactory",
+              "Tooltip": "private readonly IProductPageLinkHandlerFactory linkHandlerFactory"
+            },
+            "Symbol": "WebScraper.Jobs.AuctionEndingUpdateJob.linkHandlerFactory"
+          }
+        ],
+        "TargetLabelCenter": "2918.8891,4100.4904"
+      }
+    },
+    {
+      "Id": "26",
+      "SourceNodeId": "27",
+      "TargetNodeId": "26",
+      "Stereotype": "Association",
+      "Route": [
+        "2810.9839,3898.4853",
+        "2767.3814,4107.2007"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.WebScraper|Association|WebScraper.Scraping.IProductPageLinkHandlerFactory",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "productPageLinkHandlerFactory",
+              "Tooltip": "private readonly IProductPageLinkHandlerFactory productPageLinkHandlerFactory",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.WebScraper.productPageLinkHandlerFactory"
+          }
+        ],
+        "TargetLabelCenter": "2772.4938,4082.729"
+      }
+    },
+    {
+      "Id": "27",
+      "SourceNodeId": "27",
+      "TargetNodeId": "5",
+      "Stereotype": "Association",
+      "Route": [
+        "2689.9846,3857.7216",
+        "2538.1415,3846.9377"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.WebScraper|Association|WebScraper.Configuration.WebScraperConfiguration",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "config",
+              "Tooltip": "private readonly WebScraperConfiguration config"
+            },
+            "Symbol": "WebScraper.WebScraper.config"
+          }
+        ],
+        "TargetLabelCenter": "2563.0786,3848.7087"
+      }
+    },
+    {
+      "Id": "28",
+      "SourceNodeId": "28",
+      "TargetNodeId": "27",
+      "Stereotype": "Association",
+      "Route": [
+        "2774.5667,3741.119",
+        "2806.7493,3835.0853"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Jobs.ScrapeAuctionListsJob|Association|WebScraper.WebScraper",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "webScraper",
+              "Tooltip": "private readonly WebScraper webScraper",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Jobs.ScrapeAuctionListsJob.webScraper"
+          }
+        ],
+        "TargetLabelCenter": "2798.649,3811.434"
+      }
+    },
+    {
+      "Id": "29",
+      "SourceNodeId": "27",
+      "TargetNodeId": "29",
+      "Stereotype": "Association",
+      "Route": [
+        "2853.4566,3835.0853",
+        "3106.3223,3611.493"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.WebScraper|Association|WebScraper.Persistence.UnitOfWork.IUnitOfWorkProvider",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "unitOfWorkProvider",
+              "Tooltip": "private readonly IUnitOfWorkProvider unitOfWorkProvider",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.WebScraper.unitOfWorkProvider"
+          }
+        ],
+        "TargetLabelCenter": "3087.5938,3628.0533"
+      }
+    },
+    {
+      "Id": "30",
+      "SourceNodeId": "14",
+      "TargetNodeId": "29",
+      "Stereotype": "Association",
+      "Route": [
+        "3451.255,3902.2727",
+        "3183.6531,3611.493"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Jobs.AuctionEndingUpdateJob|Association|WebScraper.Persistence.UnitOfWork.IUnitOfWorkProvider",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "unitOfWorkProvider",
+              "Tooltip": "private readonly IUnitOfWorkProvider unitOfWorkProvider",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Jobs.AuctionEndingUpdateJob.unitOfWorkProvider"
+          }
+        ],
+        "TargetLabelCenter": "3200.5824,3629.8886"
+      }
+    },
+    {
+      "Id": "31",
+      "SourceNodeId": "19",
+      "TargetNodeId": "29",
+      "Stereotype": "Association",
+      "Route": [
+        "2874.5051,3486.319",
+        "3030.6729,3536.093"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Jobs.DeleteOldRecordsJob|Association|WebScraper.Persistence.UnitOfWork.IUnitOfWorkProvider",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "unitOfWorkProvider",
+              "Tooltip": "private readonly IUnitOfWorkProvider unitOfWorkProvider",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Jobs.DeleteOldRecordsJob.unitOfWorkProvider"
+          }
+        ],
+        "TargetLabelCenter": "3006.8535,3528.5012"
+      }
+    },
+    {
+      "Id": "32",
+      "SourceNodeId": "9",
+      "TargetNodeId": "30",
+      "Stereotype": "Association",
+      "Route": [
+        "1429.0242,3380.9833",
+        "1332.0637,3727.7076"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager|Association|WebScraper.JobScheduling.IJobScheduler",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "jobScheduler",
+              "Tooltip": "private readonly IJobScheduler jobScheduler",
+              "CanBeHidden": true
+            },
+            "Symbol": "WebScraper.Persistence.AuctionRecord.AuctionRecordManager.jobScheduler"
+          }
+        ],
+        "TargetLabelCenter": "1338.7965,3703.6313"
+      }
+    },
+    {
+      "Id": "33",
+      "SourceNodeId": "18",
+      "TargetNodeId": "30",
+      "Stereotype": "Implementation",
+      "Route": [
+        "1320.1313,3871.1076",
+        "1322.3283,3791.1076"
+      ],
+      "Payload": {
+        "Discriminator": "Other",
+        "Relationship": "WebScraper.JobScheduling.JobScheduler|Implementation|WebScraper.JobScheduling.IJobScheduler"
+      }
+    },
+    {
+      "Id": "34",
+      "SourceNodeId": "27",
+      "TargetNodeId": "31",
+      "Stereotype": "Association",
+      "Route": [
+        "2945.228,3889.4156",
+        "2995.2279,3898.2818"
+      ],
+      "Payload": {
+        "Discriminator": "Association",
+        "Relationship": "WebScraper.WebScraper|Association|ProductListCrawler.IProductListCrawler",
+        "TargetLabels": [
+          {
+            "Label": {
+              "Text2": "crawler",
+              "Tooltip": "private readonly IProductListCrawler crawler"
+            },
+            "Symbol": "WebScraper.WebScraper.crawler"
+          }
+        ],
+        "TargetLabelCenter": "2970.612,3893.9168"
+      }
+    }
+  ]
+}
