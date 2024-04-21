@@ -38,6 +38,12 @@
         Task<IEnumerable<BaseAuctionRecord>> GetAllAsync();
 
         /// <summary>
+        /// Gets asynchronously all the unique identifiers of the <see cref="BaseAuctionRecord"/> entities.
+        /// </summary>
+        /// <returns>Set of unique identifiers.</returns>
+        Task<HashSet<string>> GetAllUniqueIdentifiersAsync();
+
+        /// <summary>
         /// Gets asynchronously all the <see cref="BaseAuctionRecord"/> entities.
         /// </summary>
         /// <param name="dateTime">The date used for filtering.</param>

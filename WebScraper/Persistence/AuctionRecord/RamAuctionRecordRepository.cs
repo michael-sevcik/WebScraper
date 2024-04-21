@@ -33,6 +33,11 @@ namespace WebScraper.Persistence.AuctionRecord
             return Task.FromResult<IEnumerable<BaseAuctionRecord>>(this.baseAuctionRecords.Values);
         }
 
+        public Task<HashSet<string>> GetAllUniqueIdentifiersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public Task<IEnumerable<BaseAuctionRecord>> GetAllEndingToDateAsync(DateTime dateTime)
         {

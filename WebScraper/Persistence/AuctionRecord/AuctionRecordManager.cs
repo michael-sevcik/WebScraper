@@ -27,6 +27,8 @@ internal class AuctionRecordManager : IAuctionRecordManager
         WriteIndented = true,
     };
 
+    private HashSet<string>? uniqueIdentifiers = null;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AuctionRecordManager"/> class.
     /// </summary>
@@ -55,8 +57,8 @@ internal class AuctionRecordManager : IAuctionRecordManager
         Uri sourceUri,
         IProductPageProcessor productPageProcessor)
     {
-        var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier);
-        if (storedRecord is null)
+        var ids = await this.GetUniqueIdentifiersAsync();
+        if (ids.Contains(parsedProductPage.UniqueIdentifier))
         {
             var newAuctionRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri);
             await this.recordRepository.AddAsync(newAuctionRecord);
@@ -67,10 +69,33 @@ internal class AuctionRecordManager : IAuctionRecordManager
                 newAuctionRecord.Id,
                 productPageProcessor);
         }
+        else
+        {
+            var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier)
+                               ?? throw new Exception("Internal error - ID must exist");
 
+            await this.HandleExistingRecord(parsedProductPage, sourceUri, productPageProcessor, storedRecord).ConfigureAwait(false);
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task UpdateAuctionRecordAsync(Guid id, ParsedProductPage parsedProductPage, Uri sourceUri)
+    {
+        var updatedRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri, id);
+
+        this.logger.LogTrace("Updating the record with id {id} and URI {sourceUri}", id, sourceUri);
+        await this.recordRepository.UpdateAsync(updatedRecord);
+    }
+
+    private async Task HandleExistingRecord(
+        ParsedProductPage parsedProductPage,
+        Uri sourceUri,
+        IProductPageProcessor productPageProcessor,
+        BaseAuctionRecord storedRecord)
+    {
         // If the auction item already has an existing stored record, check whether the previous auction had already ended.
-        else if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
-                parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
+        if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
+            parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
         {
             // Send a notification.
             var message = $"""
@@ -112,15 +137,6 @@ internal class AuctionRecordManager : IAuctionRecordManager
         }
     }
 
-    /// <inheritdoc/>
-    public async Task UpdateAuctionRecordAsync(Guid id, ParsedProductPage parsedProductPage, Uri sourceUri)
-    {
-        var updatedRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri, id);
-
-        this.logger.LogTrace("Updating the record with id {id} and URI {sourceUri}", id, sourceUri);
-        await this.recordRepository.UpdateAsync(updatedRecord);
-    }
-
     private BaseAuctionRecord CreateAuctionRecord(ParsedProductPage parsingResult, Uri sourceUri, Guid? id = null)
         => new()
         {
@@ -133,4 +149,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
             AdditionalInfromation = parsingResult.AdditionalInfromation,
             Uri = sourceUri.AbsoluteUri,
         };
+
+    private async ValueTask<HashSet<string>> GetUniqueIdentifiersAsync()
+        => this.uniqueIdentifiers ??= await this.recordRepository.GetAllUniqueIdentifiersAsync();
 }
