@@ -56,52 +56,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         IProductPageProcessor productPageProcessor)
     {
         var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier);
-        if (storedRecord is not null)
-        {
-            // If the auction item already has an existing stored record, check whether the previous auction has already ended.
-            if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
-                parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
-            {
-                // Send a notification.
-                string message = $"""
-                    Old auction data:
-                    {JsonSerializer.Serialize(storedRecord, this.jsonSerializerOptions)}
-                    
-                    New auction data:
-                    
-                    {JsonSerializer.Serialize(parsedProductPage, this.jsonSerializerOptions)}
-
-                    Link: {sourceUri.OriginalString}
-                    """;
-
-                Notification notification = new(
-                    reason: "Readded item",
-                    tilte: $"Item with the name: \"{storedRecord.Name}\" and unique identifier: \"{storedRecord.UniqueIdentifier}\" was readded.",
-                    message: message);
-
-                this.logger.LogInformation("Sending notification: {notification}", notification.Title);
-
-                try
-                {
-                    await this.notifier.NotifyAsync(notification);
-                }
-                catch (Exception ex)
-                {
-                    this.logger.LogError("Notification failed: {message}", ex.Message);
-                }
-
-                // Update the stored record.
-                await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
-
-                // Schedule update job for the new record
-                await this.jobScheduler.ScheduleUpdateJobAsync(
-                parsedProductPage.EndOfAuction,
-                sourceUri,
-                storedRecord.Id,
-                productPageProcessor);
-            }
-        }
-        else
+        if (storedRecord is null)
         {
             var newAuctionRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri);
             await this.recordRepository.AddAsync(newAuctionRecord);
@@ -110,6 +65,49 @@ internal class AuctionRecordManager : IAuctionRecordManager
                 newAuctionRecord.EndOfAuction,
                 sourceUri,
                 newAuctionRecord.Id,
+                productPageProcessor);
+        }
+
+        // If the auction item already has an existing stored record, check whether the previous auction had already ended.
+        else if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
+                parsedProductPage.EndOfAuction > storedRecord.EndOfAuction)
+        {
+            // Send a notification.
+            var message = $"""
+                           Old auction data:
+                           {JsonSerializer.Serialize(storedRecord, this.jsonSerializerOptions)}
+
+                           New auction data:
+
+                           {JsonSerializer.Serialize(parsedProductPage, this.jsonSerializerOptions)}
+
+                           Link: {sourceUri.OriginalString}
+                           """;
+
+            Notification notification = new(
+                reason: "Readded item",
+                tilte: $"Item with the name: \"{storedRecord.Name}\" and unique identifier: \"{storedRecord.UniqueIdentifier}\" was readded.",
+                message: message);
+
+            this.logger.LogInformation("Sending notification: {notification}", notification.Title);
+
+            try
+            {
+                await this.notifier.NotifyAsync(notification);
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError("Notification failed: {message}", ex.Message);
+            }
+
+            // Update the stored record.
+            await this.UpdateAuctionRecordAsync(storedRecord.Id, parsedProductPage, sourceUri);
+
+            // Schedule update job for the new record
+            await this.jobScheduler.ScheduleUpdateJobAsync(
+                parsedProductPage.EndOfAuction,
+                sourceUri,
+                storedRecord.Id,
                 productPageProcessor);
         }
     }
