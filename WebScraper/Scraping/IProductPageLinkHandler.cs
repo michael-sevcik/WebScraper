@@ -10,7 +10,7 @@ public interface IProductPageLinkHandler
 {
     /// <summary>
     /// Asynchronously handles the <paramref name="links"/>
-    /// - downloads their referred content, parses it and passes the their records to an instance of <see cref="IAuctionRecordManager"/>.
+    /// - downloads their referred content, parses it and passes the records to an instance of <see cref="IAuctionRecordManager"/>.
     /// </summary>
     /// <param name="links">The links to handle.</param>
     /// <param name="targetBlock">The target block to which the parsed product pages should be passed.</param>
