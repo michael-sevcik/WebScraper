@@ -27,7 +27,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         WriteIndented = true,
     };
 
-    private HashSet<string>? uniqueIdentifiers = null;
+    private Task<HashSet<string>> uniqueIdentifiersTask;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuctionRecordManager"/> class.
@@ -49,6 +49,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         this.recordRepository = recordRepository;
         this.notifier = notifier;
         this.dateTimeProvider = dateTimeProvider;
+        this.uniqueIdentifiersTask = this.recordRepository.GetAllUniqueIdentifiersAsync();
     }
 
     /// <inheritdoc/>
@@ -74,7 +75,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
             var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier)
                                ?? throw new Exception("Internal error - ID must exist");
 
-            await this.HandleExistingRecord(parsedProductPage, sourceUri, productPageProcessor, storedRecord).ConfigureAwait(false);
+            await this.HandleExistingRecord(parsedProductPage, sourceUri, productPageProcessor, storedRecord);
         }
     }
 
@@ -87,7 +88,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         await this.recordRepository.UpdateAsync(updatedRecord);
     }
 
-    private async Task HandleExistingRecord(
+    private async ValueTask HandleExistingRecord(
         ParsedProductPage parsedProductPage,
         Uri sourceUri,
         IProductPageProcessor productPageProcessor,
@@ -149,7 +150,4 @@ internal class AuctionRecordManager : IAuctionRecordManager
             AdditionalInfromation = parsingResult.AdditionalInfromation,
             Uri = sourceUri.AbsoluteUri,
         };
-
-    private async ValueTask<HashSet<string>> GetUniqueIdentifiersAsync()
-        => this.uniqueIdentifiers ??= await this.recordRepository.GetAllUniqueIdentifiersAsync();
 }
