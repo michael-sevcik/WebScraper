@@ -5,7 +5,7 @@ namespace WebScraper.Persistence.UnitOfWork
     /// <summary>
     /// An implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    internal class ScraperUnitOfWork : IUnitOfWork
+    internal sealed class ScraperUnitOfWork : IUnitOfWork
     {
         private readonly ScraperDbContext context;
 
@@ -53,7 +53,7 @@ namespace WebScraper.Persistence.UnitOfWork
         /// Dispose method for derived entities.
         /// </summary>
         /// <param name="disposing">Are we disposing the derived object.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
