@@ -57,8 +57,8 @@ internal class AuctionRecordManager : IAuctionRecordManager
         Uri sourceUri,
         IProductPageProcessor productPageProcessor)
     {
-        var ids = await this.GetUniqueIdentifiersAsync();
-        if (ids.Contains(parsedProductPage.UniqueIdentifier))
+        var ids = await this.uniqueIdentifiersTask;
+        if (!ids.Contains(parsedProductPage.UniqueIdentifier))
         {
             var newAuctionRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri);
             await this.recordRepository.AddAsync(newAuctionRecord);

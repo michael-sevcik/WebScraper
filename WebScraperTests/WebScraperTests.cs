@@ -159,8 +159,8 @@ public class WebScraperTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(serializedAuctionRecords, Is.EqualTo(TestResources.DbScraperExpectedResult));
-            Assert.That(serializedScheduledJobDetails, Is.EqualTo(TestResources.ExpectedDetailsOfScheduledJobs));
+            Assert.That(serializedAuctionRecords, Is.EqualTo(System.Text.Encoding.Default.GetString(TestResources.DbScraperExpectedResult)));
+            Assert.That(serializedScheduledJobDetails, Is.EqualTo(System.Text.Encoding.Default.GetString(TestResources.ExpectedDetailsOfScheduledJobs)));
         });
     }
 
@@ -199,7 +199,7 @@ public class WebScraperTests
             {
                 EndOfAuction = dateTimeProvider.Now - TimeSpan.FromDays(10),
                 Name = "Record of an ended auction",
-                UniqueIdentifier = "Palikovan obrzek dmy s kloboukem *333",
+                UniqueIdentifier = "Pohlednice - palièkování *723",
             });
 
             context.SaveChanges();
