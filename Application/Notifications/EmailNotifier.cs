@@ -20,13 +20,13 @@ public class EmailNotifier : INotifier
         => (this.mailSender, this.recipient )= (mailSender, MailboxAddress.Parse(recipient));
 
     /// <inheritdoc/>
-    public async Task NotifyAsync(Notification notification)
+    public async Task NotifyAsync(Notification notification, CancellationToken ct = default)
     {
         // Format the email
         var subject = $"{notification.Reason}: {notification.Title}";
         var body = notification.Message;
 
         // Create and send the email
-        await this.mailSender.SendEmailAsync(new(recipient, subject, body));
+        await this.mailSender.SendEmailAsync(new(recipient, subject, body), ct);
     }
 }

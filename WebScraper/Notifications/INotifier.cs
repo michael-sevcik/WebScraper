@@ -11,5 +11,5 @@ public interface INotifier
     /// <param name="notification">The description of the new event.</param>
     /// <returns>Task object representing the asynchronous operation.</returns>
     /// <exception cref="Exception">Notification failed.</exception>
-    Task NotifyAsync(Notification notification);
+    Task NotifyAsync(Notification notification, CancellationToken ct = default);
 }

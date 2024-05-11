@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.2.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.47.1-preview.0.11" />
     <PackageReference Include="Spectre.Console.Analyzer" Version="0.47.1-preview.0.11">
       <PrivateAssets>all</PrivateAssets>

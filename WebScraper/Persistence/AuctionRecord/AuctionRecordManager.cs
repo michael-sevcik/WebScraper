@@ -27,7 +27,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
         WriteIndented = true,
     };
 
-    private Task<HashSet<string>> uniqueIdentifiersTask;
+    private readonly Task<HashSet<string>> uniqueIdentifiersTask;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuctionRecordManager"/> class.
@@ -56,8 +56,14 @@ internal class AuctionRecordManager : IAuctionRecordManager
     public async Task HandleParsedProductPageAsync(
         ParsedProductPage parsedProductPage,
         Uri sourceUri,
-        IProductPageProcessor productPageProcessor)
+        IProductPageProcessor productPageProcessor,
+        CancellationToken ct = default)
     {
+        if (ct.IsCancellationRequested)
+        {
+            return;
+        }
+
         var ids = await this.uniqueIdentifiersTask;
         if (!ids.Contains(parsedProductPage.UniqueIdentifier))
         {
@@ -75,7 +81,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
             var storedRecord = await this.recordRepository.GetOrDefault(parsedProductPage.UniqueIdentifier)
                                ?? throw new Exception("Internal error - ID must exist");
 
-            await this.HandleExistingRecord(parsedProductPage, sourceUri, productPageProcessor, storedRecord);
+            await this.HandleExistingRecord(parsedProductPage, sourceUri, productPageProcessor, storedRecord, ct);
         }
     }
 
@@ -92,7 +98,8 @@ internal class AuctionRecordManager : IAuctionRecordManager
         ParsedProductPage parsedProductPage,
         Uri sourceUri,
         IProductPageProcessor productPageProcessor,
-        BaseAuctionRecord storedRecord)
+        BaseAuctionRecord storedRecord,
+        CancellationToken ct = default)
     {
         // If the auction item already has an existing stored record, check whether the previous auction had already ended.
         if (storedRecord.EndOfAuction <= this.dateTimeProvider.Now &&
@@ -119,7 +126,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
 
             try
             {
-                await this.notifier.NotifyAsync(notification);
+                await this.notifier.NotifyAsync(notification, ct);
             }
             catch (Exception ex)
             {

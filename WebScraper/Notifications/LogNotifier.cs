@@ -17,7 +17,7 @@ public sealed class LogNotifier : INotifier
         => this.logger = logger;
 
     /// <inheritdoc/>
-    public Task NotifyAsync(Notification notification)
+    public Task NotifyAsync(Notification notification, CancellationToken ct = default)
     {
         var message = """
             {reason}: {Title}

@@ -18,7 +18,8 @@ public interface IAuctionRecordManager
     Task HandleParsedProductPageAsync(
         ParsedProductPage parsedProductPage,
         Uri sourceUri,
-        IProductPageProcessor productPageProcessor);
+        IProductPageProcessor productPageProcessor,
+        CancellationToken ct = default);
 
     /// <summary>
     /// Updates the auction record with the <paramref name="id"/>.

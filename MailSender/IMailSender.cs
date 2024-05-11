@@ -16,6 +16,6 @@ namespace MailSender
         /// </summary>
         /// <param name="email">The email to be sent.</param>
         /// <returns>Email sending task.</returns>
-        Task SendEmailAsync(Email email);
+        Task SendEmailAsync(Email email, CancellationToken ct = default);
     }
 }
