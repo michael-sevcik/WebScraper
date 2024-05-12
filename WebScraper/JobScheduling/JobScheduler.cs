@@ -56,6 +56,7 @@ internal sealed class JobScheduler : IJobScheduler
             .ForJob(AuctionEndingUpdateJob.Key)
             .Build();
 
+        // log
         this.logger.LogInformation("Scheduling an update job for the product on page {link}. The job start: {startTime}", link, startTime);
 
         // Schedule the job

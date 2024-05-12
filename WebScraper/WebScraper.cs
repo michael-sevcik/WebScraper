@@ -74,6 +74,7 @@ public class WebScraper
                 }
                 catch (Exception ex)
                 {
+                    // log error
                     this.logger.LogError(
                         "Crawling of product list page with link {link} failed due to an error: {message}, {inner}",
                         link,

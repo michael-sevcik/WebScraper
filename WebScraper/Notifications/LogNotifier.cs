@@ -26,6 +26,7 @@ public sealed class LogNotifier : INotifier
             {body}
             """;
 
+        // log
         this.logger.LogInformation(message, notification.Reason, notification.Title, notification.Message);
         return Task.CompletedTask;
     }

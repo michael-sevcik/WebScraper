@@ -90,6 +90,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
     {
         var updatedRecord = this.CreateAuctionRecord(parsedProductPage, sourceUri, id);
 
+        // Log the update
         this.logger.LogTrace("Updating the record with id {id} and URI {sourceUri}", id, sourceUri);
         await this.recordRepository.UpdateAsync(updatedRecord);
     }
@@ -122,6 +123,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
                 tilte: $"Item with the name: \"{storedRecord.Name}\" and unique identifier: \"{storedRecord.UniqueIdentifier}\" was readded.",
                 message: message);
 
+            // log
             this.logger.LogInformation("Sending notification: {notification}", notification.Title);
 
             try
@@ -130,6 +132,7 @@ internal class AuctionRecordManager : IAuctionRecordManager
             }
             catch (Exception ex)
             {
+                // log
                 this.logger.LogError("Notification failed: {message}", ex.Message);
             }
 
