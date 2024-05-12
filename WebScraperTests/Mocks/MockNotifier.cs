@@ -10,7 +10,7 @@ namespace WebScraperTests.Mocks;
 internal class MockNotifier : INotifier
 {
     public int NotificationCount { get; private set; }
-    public Task NotifyAsync(Notification notification)
+    public Task NotifyAsync(Notification notification, CancellationToken ct = default)
     {
         ++this.NotificationCount;
         return Task.CompletedTask;
