@@ -28,16 +28,7 @@ EmailNotifier emailNotifier = new(
 
 // Create and configure the application host builder
 var hostBuilder = Host.CreateDefaultBuilder();
-hostBuilder.ConfigureServices(services =>
-{
-    //services.AddSerilog((config) =>
-    //{
-    //    config.WriteTo.Console();
-    //    //config.WriteTo.File("logs/log.txt");
-    //});
-    //services.AddLog4Net();
-    //services.AddLogging(configure => configure.AddConsole());
-});
+
 hostBuilder.ConfigureLogging(logging =>
 {
     //logging.ClearProviders();
