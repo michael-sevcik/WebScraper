@@ -18,7 +18,7 @@ public class MailKitSender : IMailSender
         => this.smtpConfiguration = smtpConfiguration;
 
     /// <inheritdoc/>
-    public async Task SendEmailAsync(Email email)
+    public async Task SendEmailAsync(Email email, CancellationToken ct = default)
     {
         // Create the message
         var message = new MimeMessage();
@@ -42,10 +42,10 @@ public class MailKitSender : IMailSender
         // Send the message
         using var smtp = new SmtpClient();
 
-        await smtp.ConnectAsync(smtpConfiguration.Host, this.smtpConfiguration.Port, SecureSocketOptions.Auto);
+        await smtp.ConnectAsync(smtpConfiguration.Host, this.smtpConfiguration.Port, SecureSocketOptions.Auto, ct);
 
-        await smtp.AuthenticateAsync(this.smtpConfiguration.UserName, this.smtpConfiguration.Password);
-        await smtp.SendAsync(message);
-        await smtp.DisconnectAsync(true);
+        await smtp.AuthenticateAsync(this.smtpConfiguration.UserName, this.smtpConfiguration.Password, ct);
+        await smtp.SendAsync(message, ct);
+        await smtp.DisconnectAsync(true, ct);
     }
 }

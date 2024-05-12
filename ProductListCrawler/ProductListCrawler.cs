@@ -32,9 +32,15 @@ public class ProductListCrawler : IProductListCrawler
             }
 
             var output = await processor.ProcessAsync(await downloader.GetPageDocumentAsync(nextProductPage));
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             if (output.productPageUris.Any())
             {
-                if (!await productPageTarget.SendAsync(output.productPageUris))
+                if (!await productPageTarget.SendAsync(output.productPageUris, token))
                 {
                     throw new Exception("Consumer missing.");
                 }

@@ -57,7 +57,7 @@ public class Startup
             }
 
             services.AddDbContext<ScraperDbContext>(
-            options => options.UseSqlServer(this.config.SqlServerConnectionString));
+                options => options.UseSqlServer(this.config.SqlServerConnectionString));
 
             services.AddScoped<IAuctionRecordRepository, DbAuctionRecordRepository>();
             services.AddScoped<IAuctionRecordManager, AuctionRecordManager>();

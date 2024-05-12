@@ -32,6 +32,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
         ITargetBlock<ProductPageParsingResult> targetBlock,
         CancellationToken cancellationToken)
     {
+        // log
         this.logger.LogInformation("Handling link block", links);
 
         await Parallel.ForEachAsync(links, cancellationToken, async (link, ct) =>
@@ -53,6 +54,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
             }
         });
 
+        // log
         this.logger.LogTrace("Finished handling link block");
     }
 
@@ -67,6 +69,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
         }
         catch (NetworkException ex)
         {
+            // log
             this.logger.LogError("Exception occured: {message}, inner: {inner}", ex.Message, ex.InnerException);
             return null;
         }
@@ -79,6 +82,7 @@ internal sealed class ProductPageLinkHandler : IProductPageLinkHandler
         }
         catch (ParseException ex)
         {
+            // log
             this.logger.LogError("Exception occured: {message}, inner: {inner}", ex.Message, ex.InnerException);
             return null;
         }

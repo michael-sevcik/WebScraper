@@ -74,6 +74,7 @@ public class WebScraper
                 }
                 catch (Exception ex)
                 {
+                    // log error
                     this.logger.LogError(
                         "Crawling of product list page with link {link} failed due to an error: {message}, {inner}",
                         link,
@@ -107,7 +108,7 @@ public class WebScraper
                 ActionBlock<ProductPageParsingResult> productPageActionBlock = new(
                     async p =>
                     {
-                        await manager.HandleParsedProductPageAsync(p.ParsedProductPage, p.Source, p.ProductPageProcessor);
+                        await manager.HandleParsedProductPageAsync(p.ParsedProductPage, p.Source, p.ProductPageProcessor, ct);
                     },
                     new()
                     {
@@ -123,6 +124,11 @@ public class WebScraper
                 bufferBlock.Complete();
 
                 await productPageActionBlock.Completion;
+
+                if (ct.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 await unitOfWork.CompleteAsync();
             },

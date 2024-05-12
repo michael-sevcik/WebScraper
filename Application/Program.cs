@@ -1,10 +1,12 @@
 ﻿using Application;
 using HtmlAgilityPack;
 using MailSender;
+using Microsoft.EntityFrameworkCore.SqlServer.Update.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using Serilog;
 using Spectre.Console;
 using System.Security.Policy;
 using WebScraper;
@@ -26,9 +28,12 @@ EmailNotifier emailNotifier = new(
 
 // Create and configure the application host builder
 var hostBuilder = Host.CreateDefaultBuilder();
-hostBuilder.ConfigureServices(services =>
+
+hostBuilder.ConfigureLogging(logging =>
 {
-    services.AddLogging(configure => configure.AddConsole());
+    //logging.ClearProviders();
+    logging.AddLog4Net();
+    //logging.AddConsole();
 });
 
 // Create the web scraper startup instance
